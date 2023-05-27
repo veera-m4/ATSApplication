@@ -1,0 +1,154 @@
+﻿@model byteforzaFinalProject.DTO.LoginDTO;
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+
+	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<style>
+		main
+		{
+			background-color:#fff;
+		}
+		.wrapper{
+			margin:auto;
+  width: 100%;
+  max-width: 550px;
+  background: rgba(231, 239, 248, 0.8);
+  padding: 30px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+.wrapper .title h1{
+  color: #131313;
+  text-align: center;
+  margin-bottom: 25px;
+}
+textarea 
+{
+	border: none;
+	outline: none;
+}
+input
+{
+	border: none;
+	outline: none;
+}
+select
+{
+	border: none;
+	outline: none;
+}
+.input-fields{
+  display: flex;
+  flex-direction: column;
+  margin-right: 4%;
+}
+
+.input-fields,
+.msg{
+  width: 68%;
+}
+input:active,
+textarea:active{
+	border: none;
+	outline: none;
+}
+.input-fields .input,
+.msg textarea{
+  margin: 10px 0;
+  background: transparent;
+  border: 0px;
+  border-bottom: 2px solid #1e1e1e;
+  padding: 10px;
+  color: #29292a;
+  width: 100%;
+}
+
+.msg textarea{
+  height: 212px;
+}
+
+::-webkit-input-placeholder {
+  /* Chrome/Opera/Safari */
+  color: #212121;
+}
+:-ms-input-placeholder {
+  /* IE 10+ */
+  color: #37393a;
+}
+
+.btn {
+    background: #39b7dd;
+    text-align: center;
+    padding: 1rem;
+    border-radius: 20px;
+    color: #2a2929;
+    cursor: pointer;
+    text-transform: uppercase;
+	width:auto;
+}
+.buttons-section
+{
+	display: flex;
+	justify-content: space-between;
+}
+
+@@media screen and (max-width: 600px){
+  .contact-form{
+    flex-direction: column;
+  }
+  .msg textarea{
+    height: 80px;
+  }
+  .input-fields,
+  .msg{
+    width: 100%;
+  }
+}
+	</style>
+</head>
+
+<body>
+
+	<div class="wrapper">
+		<div class="title">
+			<h1>Login</h1>
+		</div>
+		<div class="contact-form">
+			<div class="input-fields">
+                <form asp-action="Login" method="post">
+                    <input type="text" class="input" placeholder="Email" asp-for="Email">
+                    <input type="password" class="input" placeholder="Password" asp-for="Password">
+					@if (TempData["msg"] != null)
+					{
+						<div class="text-danger">@TempData["msg"]</div>
+					}
+					<input type="submit" value="Login" class="login-btn btn" />
+					<p>new user ?<a class="text-alert" href="/UserAuth/Registration"> Register</a> </p>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	
+</body>
+
+
+</html>
+
+
+
+

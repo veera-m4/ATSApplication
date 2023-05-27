@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - byteforzaFinalProject</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/byteforzaFinalProject.styles.css" asp-append-version="true" />
+     
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>  
+<style>
+    main{
+            background-color: #efefef;
+            width:100%
+    }
+    nav{
+        position:fixed;
+        margin-bottom:2rem;
+        margin-right : 2rem;
+        margin-left: 2rem;
+    }
+    @@media (min-width: 1200px)
+    {
+        .container {
+                max-width: 1370px;
+        }
+    }
+
+</style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light ">
+        <a class="navbar-brand" asp-action="HomePage">Navbar</a>
+        <div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" asp-action="HomePage">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-action="CandidateDetail">Candidate</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-action="ReportPage">Report</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-action="FeedbackPage">feedback</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <main role="main" class="pb-3">
+            
+            @RenderBody()
+        </main>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

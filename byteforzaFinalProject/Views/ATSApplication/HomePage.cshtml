@@ -1,0 +1,415 @@
+﻿@using byteforzaFinalProject.DTO;
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    var feedback = ViewData["feedback"] as List<HomePageFeedback>;
+    var candidate = ViewData["candidate"] as List<CandidateProfileData>;
+    var schedule = ViewData["InrerviewSchedule"] as List<InterviewScheludeDetail>;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/byteforzaFinalProject.styles.css" asp-append-version="true" />
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>  
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/font-awesome.min.css">
+    <title>test</title>
+
+<style>
+    .main-body {
+         background-color: #efefef;
+         padding : 2rem;
+    }
+    .top-block
+    {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        background-color: #efefef;
+    }
+
+    .left-section {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    .right-section {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    .recruitment-process {
+        background-color: #fff;
+        margin: 1rem;
+        padding-left: 3rem;
+    }
+
+    .bar {
+        background-color: #fff;
+        margin: 1rem;
+    }
+
+    .Interview-schedule-and-candidate-activities {
+        font-size: smaller;
+        background-color: #fff;
+    }
+
+    .row {
+        display: flex;
+    }
+
+    .see-more {
+        margin: .5rem;
+        margin-right: 4rem;
+        height: 35px;
+        width: 120px;
+        background-color: #c1bdbd;
+        border-color: #22777f;
+        border-radius: 15px;
+        color: black;
+    }
+
+    .table {
+        font-size: smaller;
+        border-width: 2rem;
+        background-color: #fff;
+    }
+
+    .skill {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+        .skill > p {
+            margin-right: 1rem;
+        }
+
+    .right-section > .Interview-schedule-and-candidate-activities {
+        height: 200px;
+        overflow-y: scroll
+    }
+
+    .left-section > .Interview-schedule-and-candidate-activities {
+        height: 200px;
+        overflow-y: scroll
+    }
+
+    .dognutchart {
+        align-items: center;
+        background-color: #ffffff;
+        margin: 2rem;
+        position: relative;
+        padding: 10px;
+        padding-left: 50px;
+    }
+
+        .dognutchart > canvas {
+            align-items: center;
+        }
+
+    .feedback {
+        overflow-y: scroll;
+        margin: 2rem;
+        max-height: 600px;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .progress {
+        background-color: #d8d8d8;
+        border-radius: 20px;
+        position: relative;
+        margin: 15px 0;
+        height: 10px;
+        width: 300px;
+    }
+
+    .progress-done {
+        background: linear-gradient(to left, #9ad7ec, #91f4f6);
+        box-shadow: 0 3px 3px -5px #7cd9f3, 0 2px 5px #a5f3fd;
+        border-radius: 20px;
+        color: #000000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 0;
+        opacity: 0;
+        transition: 1s ease 0.3s;
+        font-size: 10px;
+        padding:0.4rem;
+    }
+    .col-md-12
+    {
+        display:flex;
+    }
+    .main{
+        background-color: #c1bdbd;
+    }
+</style>
+</head>
+<body>
+    <div class=" main-body">
+
+        <div>
+            <div class="top-block">
+                <div class="left-section">
+                    <div class="recruitment-process">
+                        <p>Recuitement progress</p>
+                        <div class="progress">
+                            <div class="progress-done" data-done="70">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bar">
+                        <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
+                    </div>
+                    <div class="Interview-schedule-and-candidate-activities">
+                        <div class="row">
+                            <div class="col-md-12">	<h2>Candidate Interview</h2><a asp-action="CandidateDetail" class="btn btn-primary see-more">See details</a> </div>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Experience</th>
+                                    <th>Key Skill</th>
+                                    <th>Notice Period</th>
+                                    <th>Current CTC</th>
+                                    <th>Expected CTC</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (CandidateProfileData candidateProfile in candidate)
+                                {                                    
+                                        <tr>
+                                            <td>@candidateProfile.Name</td>
+                                            <td>@candidateProfile.Experience</td>
+                                            <td class="skill">
+                                            @foreach (string skill in candidateProfile.KeySkills)
+                                            {
+                                                        <p>@skill</p>
+                                            }
+                                            </td>
+                                            <td>@candidateProfile.Notice</td>
+                                            <td>@candidateProfile.CurrentCTC</td>
+                                            <td>@candidateProfile.ExpectedCTC</td>
+                                            <td>
+                                                <span class="label label-info">@candidateProfile.Status</span>
+                                            </td>
+                                        </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="right-section">
+                    <div class="Interview-schedule-and-candidate-activities">
+                        <div class="row">
+                            <div class="col-md-12">	<h2>Scheduled Interview</h2><a asp-action="ReportPage" class="btn btn-primary see-more">See details</a> </div>
+
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>interviewer</th>
+                                    <th>type of round</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (InterviewScheludeDetail scheludeDetail in schedule)
+                                {
+                                        <tr>
+                                            <td>@scheludeDetail.Name</td>
+                                            <td>@scheludeDetail.InterviewPanel</td>
+                                            <td>
+                                            @scheludeDetail.type_of_round
+                                            </td>
+                                            <td>
+                                            @scheludeDetail.date_only
+                                            </td>
+                                            <td>
+                                            @scheludeDetail.TimeOnly
+                                            </td>
+                                        </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="dognutchart">
+                        <canvas id="pie-chart" width="300px" height="300px"></canvas>
+                    </div>
+                </div>
+
+            </div>
+            <div class="feedback">
+                <div class="row">
+                    <div class="col-md-12">	<h2>Recent feedback</h2><a asp-action="FeedbackPage" class="btn btn-primary see-more">See details</a> </div>
+
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>interviewer</th>
+                            <th>type of round</th>
+                            <th>date</th>
+                            <th>rating</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (HomePageFeedback pageFeedback in feedback)
+                        {
+                            <tr>
+                                <td>@pageFeedback.Name</td>
+                                <td>
+                                @pageFeedback.Interviewer
+                                </td>
+                                <td>
+                                    @pageFeedback.TypeOfRound
+                                </td>
+                                <td>
+                                @pageFeedback.DateOnly
+                                </td>
+                                <td>
+                                    <div>
+                                    @for (int i = 0; i < pageFeedback.Rating; i++)
+                                    {
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#f4f813;" class="bi bi-star-fill" viewBox="0 0 16 16">
+                                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
+                                                </svg>
+                                    }
+                                    @if (pageFeedback.halfstar)
+                                    {
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#f4f813;" class="bi bi-star-half" viewBox="0 0 16 16">
+                                                    <path d="M5.354 5.119 7.538.792A.516.516 0 0 1 8 .5c.183 0 .366.097.465.292l2.184 4.327 4.898.696A.537.537 0 0 1 16 6.32a.548.548 0 0 1-.17.445l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256a.52.52 0 0 1-.146.05c-.342.06-.668-.254-.6-.642l.83-4.73L.173 6.765a.55.55 0 0 1-.172-.403.58.58 0 0 1 .085-.302.513.513 0 0 1 .37-.245l4.898-.696zM8 12.027a.5.5 0 0 1 .232.056l3.686 1.894-.694-3.957a.565.565 0 0 1 .162-.505l2.907-2.77-4.052-.576a.525.525 0 0 1-.393-.288L8.001 2.223 8 2.226v9.8z" />
+                                                </svg>
+                                        @for (int i = 0; i < 4 - pageFeedback.Rating; i++)
+                                        {
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#f4f813;" class="bi bi-star" viewBox="0 0 16 16">
+                                                <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z" />
+                                            </svg>
+                                        }
+                                    }
+                                    @if (!pageFeedback.halfstar)
+                                    {
+                                        @for (int i = 0; i < 5 - pageFeedback.Rating; i++)
+                                        {
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#f4f813;" class="bi bi-star" viewBox="0 0 16 16">
+                                                <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z" />
+                                            </svg>
+                                        }
+                                    }
+
+                                        
+                                    </div>
+                                </td>
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+
+
+            </div>
+
+        </div>
+    </div>
+    <script>
+
+
+
+
+        jQuery.ajax({
+            url: '@Url.Action("HomePagegraphData", "ATSApplication")',
+            type: "GET",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                const progress = document.querySelector('.progress-done');
+                progress.style.width = data[0].toString() + '%';
+                progress.style.opacity = 1;
+                progress.innerHTML = data[0].toString() + '%';
+
+
+                var xValues = ["Selected", "pending", "rejected"];
+                var data1 = [];
+                data1.push(data[1]);
+                data1.push(data[2]);
+                data1.push(data[3]);
+                var data2 = [];
+                data2.push(data[4]);
+                data2.push(data[5]);
+                data2.push(data[6]);
+                var barColors = ["green", "blue", "red",];
+                new Chart(document.getElementById('pie-chart'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ["selected", "on progress", "rejected"],
+                        datasets: [{
+                            backgroundColor: ["#c5e9f2", "#43d5fa", "#05a2c9"],
+                            data: data2
+                        }]
+                    },
+                    options: {
+                        responsive: false,
+                        title: {
+                            display: true,
+                            text: 'This week progress'
+                        },
+                        reponsive: true
+                    }
+                });
+                new Chart("myChart", {
+                    type: "bar",
+                    data: {
+                        labels: xValues,
+                        datasets: [{
+                            backgroundColor: barColors,
+                            data: data1
+                        }]
+                    },
+                    options: {
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: "Candidate Application Report"
+                        },
+
+
+                        responsive: true,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+
+
+                    }
+                });
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        });
+
+
+
+
+    </script>
+</body>
+</html>

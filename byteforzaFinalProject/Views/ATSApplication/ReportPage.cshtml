@@ -1,0 +1,432 @@
+﻿@using byteforzaFinalProject.DTO;
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    var report = ViewData["interviewReport"] as List<InterviewReportDetails>;
+    var schelude = ViewData["InrerviewSchedule"] as List<InterviewScheludeDetail>;
+    var details = ViewData["PageDetails"] as ReportPageDetails;
+}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Trirong">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <style>
+        .chart-heading {
+              font-family: "Rubik", sans-serif;
+              color: #023047;
+              text-transform: uppercase;
+              font-size: 24px;
+              text-align: center;
+            }
+
+            .chart-container {
+              width: 200px;
+            }
+            .my-chart
+            {
+                height: 50px;
+                width: 50px;
+            }
+            .second-section
+            {
+                padding: 2rem 2rem 2rem 2rem;
+                background-color:#ffffff;
+            }
+            .job-information
+            {
+                display: flex;
+                padding-right: 0%;
+            }
+
+            .report-details-list
+            {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+            }
+            .report-details
+            {
+                margin: 5px;
+                background-color: #ffffff;
+                width: 150px;
+                padding: 1rem 1rem 1rem 1rem;
+                border-radius: 2rem;
+            }
+            .report-details:hover
+            {
+                margin: 2px;
+                background-color: rgb(247, 251, 252);
+    
+            }
+            .top-section
+            {
+                display: flex;
+    
+    
+            }
+            .top-right-section
+            {
+                display: block;
+                padding: 1rem 2rem 2rem 2rem;
+                width: 70%;
+            }
+            .top-right-section-name
+            {
+                font-family: 'Poppins', sans-serif;
+                display: block;
+                padding: 1rem 2rem 2rem 2rem;
+                font-size: large;
+            }
+            .interview-title
+            {
+                display: block;
+                padding: 1rem 1rem 0rem 1rem;
+                font-family: "Trirong", serif;
+                font-size: 28px;
+            }
+            .interview-count-icon
+            {
+                justify-content: space-between;
+                display: flex;
+                padding: 0rem 1rem 1rem 1rem;
+            }
+            .top-left-section
+            {
+                display: block;
+                padding: 2rem 2rem 1rem 2rem;
+                width: 30%;
+                font-weight: bold;
+                background-color: #ffffff;
+                margin: 5px;
+    
+            }
+            .interview-icon
+            {
+                padding-right: 5rem;
+            }
+            .interview-icon>img
+            {
+                align-items: right;
+                width:70px;
+                height :70px
+            }
+            .interview-count
+            {
+                vertical-align: middle;
+                padding-top: 3rem;
+                padding-left: 4rem;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: large;
+            }
+            .report-img-top
+            {
+                height: 60px;
+                width: 60px;
+                text-align: center;
+                align-items: center;
+            }
+            .report-text
+            {
+                vertical-align: middle;
+                font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                font-size: medium;
+                color : rgb(129, 156, 220);
+            }
+            .report-title
+            {
+                font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                font-size: small;
+                color : rgb(38, 30, 30);
+            }
+            .report-body
+            {
+                display: flex;
+                justify-content: space-between;
+                padding-right: 2rem;
+            }
+            .report-buttom-section-left
+            {
+                display:grid;
+                grid-template-columns: repeat(1, 1fr);
+    
+            }
+            .report-buttom-section-left-top
+            {
+                display: block;
+                margin: 5px;
+                background-color: #ffffff;
+            }
+            .report-buttom-section-left-buttom
+            {
+                display: block;
+                margin: 5px;
+                background-color: #ffffff;
+                overflow-y: scroll;
+                height:250px
+    
+            }
+            .report-buttom-section
+            {
+                margin: 7px;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                height:600px
+            }
+            .report-buttom-section-right
+            {
+                display: block;
+                margin: 5px;
+                background-color: #ffffff;
+                overflow-y: scroll;
+                height:630px
+            }
+            .btn-primary
+            {
+                border-radius: 3rem;
+                background-color: #05a2c9;
+            }
+            .table tbody button{
+                height :auto;
+                width : auto;
+                padding: 2px 3px 3px 3px;
+                margin: 10px;
+                font-size: smaller;
+            }
+            .table td
+            {
+                font-size: 12px;
+                padding: 2rem;
+                vertical-align: middle;
+            }
+
+            .table th
+            {
+                font-size: 12px;
+            }
+            #pie-chart
+            {
+                text-align: left;
+
+            }
+            .report-buttom-section-left-top
+            {
+                text-align: center;
+            }
+
+            .report-buttom-section-left-top>div
+            {
+                padding-left: 5rem;
+            }
+            .panel-heading
+            {
+                justify-content: space-between;
+                display: flex;
+            }
+            .panel-heading>button
+            {
+                height: auto;
+                width: auto;
+                padding: 3px 3px 3px 3px;
+                margin: 20px;
+                font-size: small;
+            }
+    </style>
+  </head>
+  <body>
+    <div>
+        <div class = "top-section">
+            <diV class ="top-left-section">
+                <div>
+                    <div class = "interview-title">
+                        Total interview
+                    </div>
+                    <div class = "interview-count-icon">
+                        <div class ="interview-count">@details.totalInterview</div>
+                        <div class="interview-icon">
+                            <img src="~/images/5a2196bda45b33.0645048615121507176732.png">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class = "top-right-section">
+                <div class = "top-right-section-name">Report</div>
+                <div class = "report-details-list">
+                    
+                    <div class = "report-details">
+                        <h5 class="report-title">Number of Candidate applied</h5>
+                        <div class="report-body">
+                            <p class="report-text">@details.total_of_candidate</p>
+                            <img class="report-img-top" src="~/images/Screenshot 2023-05-12 010119.png" alt="Candidate-logo">
+                        </div>
+                    </div>
+
+                    <div class = "report-details">
+                        <h5 class="report-title">Number of Candidate selected</h5>
+                        <div class="report-body">
+                            <p class="report-text">@details.candidate_selected</p>
+                            <img class="report-img-top" src="~/images/Screenshot 2023-05-12 005629.png" alt="Candidate-logo">
+                            
+                        </div>
+                    </div>
+                    <div class = "report-details">
+                        <h5 class="report-title">Number of Candidate on process</h5>
+                        <div class="report-body">
+                            <p class="report-text">@details.candidate_on_process</p>
+                            <img class="report-img-top" src="~/images/Screenshot 2023-05-12 010414.png" alt="Candidate-logo">
+                        </div>
+                    </div>
+
+                    <div class = "report-details">
+                        <h5 class="report-title">Number of Candidate rejected</h5>
+                        <div class="report-body">
+                            <p class="report-text">@details.candidate_Rejected</p>
+                            <img class="report-img-top" src="~/images/Screenshot 2023-05-12 010243.png" alt="Candidate-logo">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class = "report-buttom-section">
+            <div class = "report-buttom-section-left">
+                <div class = "report-buttom-section-left-top">
+                    <h1>This week report</h1>
+                    <div>
+                    <canvas id="pie-chart" width="300px" height="300px"></canvas>
+                    <script>
+
+                          jQuery.ajax({
+                                    url: '@Url.Action("graphData", "ATSApplication")',
+                                    type: "GET",
+                                    dataType: "json",
+                                    contentType: "application/json; charset=utf-8",
+                                    success: function (data) {
+                                        new Chart(document.getElementById('pie-chart'), {
+                                            type: 'doughnut',
+                                            data: {
+                                            labels: ["selected", "on progress", "rejected"],
+                                            datasets: [{
+                                                backgroundColor: [ "#c5e9f2","#43d5fa","#05a2c9"],
+                                                data: data
+                                            }]
+                                            },
+                                            options: {
+                                            responsive: false,
+                                            title: {
+                                                display: true,
+                                                text: 'Pie Chart for admin panel'
+                                            },
+                                            reponsive: true
+                                            }
+                                        });
+                                    },
+                                    error: function (error) {
+                                        console.log(error)
+                                    }
+                                });
+
+
+        
+                      </script>
+                    </div>
+                </div>
+                
+                
+                <script src="main.js"></script>
+                <div class = "report-buttom-section-left-buttom">
+                    <div class="panel-heading">
+                        <h2>recent interview result</h2>
+                        <button class="btn btn-danger pull-right"><span class="glyphicon glyphicon-plus"></span> Add</button>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>interviewer</th>
+                                <th>type of round</th>
+                                <th >result</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach(InterviewReportDetails interviewReportDetails in report)
+                            {
+                                <tr>
+                                <td>@interviewReportDetails.Name</td>
+                                <td>@interviewReportDetails.InterviewPanel</td>
+                                <td>@interviewReportDetails.type_of_round</td>
+                                <td>@interviewReportDetails.result</td>
+                                <td>
+                                <button class="btn btn-danger pull-right"><span class="glyphicon glyphicon-trash"></span> Edit</button>
+                                </td>
+                            </tr>
+                            }
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class = "report-buttom-section-right">
+                <div class="panel-heading">
+                    <h2>Schelude interview </h2>
+                    <button class="btn btn-danger pull-right"><span class="glyphicon glyphicon-plus"></span> Add</button>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>interviewer</th>
+                            <th>type of round</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(InterviewScheludeDetail interviewScheludeDetail in schelude)
+                        {
+                            <tr>
+                            <td>@interviewScheludeDetail.Name</td>
+                            <td>@interviewScheludeDetail.InterviewPanel</td>
+                            <td>
+                                @interviewScheludeDetail.type_of_round</td>
+                            <td>
+                                @interviewScheludeDetail.date_only
+                            </td>
+                            <td>
+                                @interviewScheludeDetail.TimeOnly
+                            </td>
+                            <td>
+                                <button class="btn btn-danger pull-right"><span class="glyphicon glyphicon-trash"></span> Edit</button>
+                            </td>
+                        </tr>
+                        }
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+      
+      <!-- You can find the library code from below link  -->
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <!-- end of library link  -->
+      
+      
+   </body>
+</html>

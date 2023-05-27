@@ -1,0 +1,268 @@
+﻿@using byteforzaFinalProject.DTO;
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    var job = ViewData["job"] as List<JobDTO>;
+    var appliedJob = ViewData["appliedJob"] as List<AppliedJobDTO>;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/byteforzaFinalProject.styles.css" asp-append-version="true" />
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/font-awesome.min.css">
+    <title>test</title>
+    <style>
+        .table {
+            align-items: center;
+        }
+
+            .table > tbody > tr > td > button {
+                height: auto;
+                width: auto;
+                padding: 3px 3px 3px 3px;
+                margin: 10px;
+                font-size: smaller;
+            }
+
+            .table > tbody > tr > td {
+                vertical-align: middle;
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+
+        .panel-heading {
+            padding: 1px 1px 1px 1px;
+        }
+
+            .panel-heading > button {
+                height: auto;
+                width: auto;
+                padding: 3px 3px 3px 3px;
+                margin: 10px;
+                font-size: small;
+            }
+
+            .panel-heading > p {
+                display: inline-block;
+                height: auto;
+                width: auto;
+                padding: 0%;
+                margin: 10px;
+            }
+
+        .table-head-section {
+            background-color: #ffffff;
+            padding: 0%;
+            align-items: center;
+        }
+
+        .card-block {
+            display: grid;
+            width: 50%;
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .card-bar {
+            background-color: #ffffff;
+            padding-top: 50px;
+            padding-right: 50px;
+            padding-left: 50px;
+            padding-bottom: 40px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .bar > p {
+            text-align: center;
+        }
+
+        .row {
+            padding-top: 30px;
+        }
+
+        .card-img-top {
+            height: 60px;
+            width: 60px;
+            text-align: center;
+            align-items: center;
+        }
+
+        .card {
+            padding: 5px 5px 5px 5px;
+            width: auto;
+            height: auto;
+        }
+
+        .btn-primary {
+            border-radius: 3rem;
+            background-color: #a3e4eb;
+        }
+
+        .main-body {
+            background-color: #efefef;
+            margin: 1rem;
+        }
+
+        .card-text {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-size: medium;
+            color: rgb(129, 156, 220);
+        }
+
+        .card-title {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-size: medium;
+            color: rgb(38, 30, 30);
+        }
+
+        .job-right {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .job-contents {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .job-information {
+            display: flex;
+            padding-right: 0%;
+        }
+
+        .job-contents > div > div {
+            padding-right: 1rem;
+        }
+
+        .job-list {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            background-color: #ffffff;
+            padding: 2rem 2rem 2rem 2rem;
+        }
+
+        .job-details {
+            margin: 5px;
+            background-color: rgb(228, 240, 243);
+            width: 275px;
+            height: 200px;
+            padding: 1rem 1rem 1rem 1rem;
+            border-radius: 2rem;
+        }
+
+        a, a:hover, a:focus, a:active {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .job-details:hover {
+            margin: 2px;
+            background-color: rgb(213, 237, 243);
+            width: 285px;
+        }
+
+        .job-left > div {
+            padding: .2rem 0rem 0rem 0rem;
+        }
+
+        .job-designation {
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .job-information {
+            font-size: 14px;
+        }
+
+        .skill {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+    </style>
+</head>
+<body>
+    <div class="main-body">
+        <div class="AppliedJobs">
+            <table class="table" id="myTable">
+                <thead>
+                    <tr>
+                        <th>S.no</th>
+                        <th>Role</th>
+                        <th>Location</th>
+                        <th>Applied Date</th>
+                        <th>Status</th>
+                        <th>date</th>
+                        <th>rating</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @for(int i=0;i<appliedJob.Count;i++)
+                    {
+                        <tr>
+                            <td>@i</td>
+                            <td>@appliedJob[i].Role</td>
+                            <td>
+                                @appliedJob[i].Location
+                            </td>
+                            <td>
+                                @appliedJob[i].AppliedDate
+                            </td>
+                            <td>
+                                @appliedJob[i].status
+                            </td>
+                            
+                        </tr>
+
+                    }
+                </tbody>
+        </div>
+        <div class="job-list">
+            @foreach (JobDTO j in job)
+            {
+
+                <div class="job-details" onclick="location.href = '@Url.Action("JobDetails","ATSApplication",new {id=j.Id})'">
+                    <div class="job-left">
+                        <div class="job-designation">
+                            @j.Role
+                        </div>
+                        <div class="job-contents">
+                            <div class="job-information">
+                                <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-briefcase-fill" viewBox="0 0 16 16">
+                                        <path d="M6.5 1A1.5 1.5 0 0 0 5 2.5V3H1.5A1.5 1.5 0 0 0 0 4.5v1.384l7.614 2.03a1.5 1.5 0 0 0 .772 0L16 5.884V4.5A1.5 1.5 0 0 0 14.5 3H11v-.5A1.5 1.5 0 0 0 9.5 1h-3zm0 1h3a.5.5 0 0 1 .5.5V3H6v-.5a.5.5 0 0 1 .5-.5z" />
+                                        <path d="M0 12.5A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5V6.85L8.129 8.947a.5.5 0 0 1-.258 0L0 6.85v5.65z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p>@j.Type</p>
+                                </div>
+                            </div>
+                            <div class="job-information">
+                                <div class="job-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                                        <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p>@j.Location</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
+            }
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,162 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    var job = ViewData["job"] as Job;
+}
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/byteforzaFinalProject.styles.css" asp-append-version="true" />
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+  </head>
+  <body>
+
+
+  <div class="content">
+
+    <div class="container sub-container">
+
+      <div class="table-responsive">
+
+        <table class="table custom-table">
+          <thead>
+            <tr >
+              <th class ="table-heading" scope="col"><strong>Job Details</strong> </th>
+              <th></th>
+            </tr>
+          </thead>
+        <tbody>
+            <tr>
+                <td>
+                    Role
+                </td>
+                <td>
+                  <strong>@job.Role</strong>
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    Experience
+                </td>
+                <td>
+                  <strong> @job.ExperienceRequired</strong>
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    Location
+                </td>
+                <td>
+                  <strong>
+                    @job.Location
+                  </strong>
+
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    Type
+                </td>
+                <td>
+                  <strong>
+                    @job.Type
+                  </strong>
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Vaccanies
+                </td>
+                <td>
+                  <strong>@job.Vaccanies</strong>
+
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Description
+                </td>
+                <td>
+                  <strong>
+                    @job.Description
+                  </strong>
+
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    Posted date
+                </td>
+                <td>
+                  <strong>
+                    @job.PostedDate
+                  </strong>
+
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    number of Candidate selected for the role
+                </td>
+                <td>
+                  <strong>
+                    @job.Selected
+                  </strong>
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    number of candidates Onprocess
+                </td>
+                <td>
+                  <strong>
+                    @job.OnProcess
+                  </strong>
+
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        @if(User.IsInRole("staff"))
+        {
+            <div class="buttonsection" style="margin-left:2rem;">
+                <button class="btn btn-danger pull-right" onclick="location.href = '@Url.Action("EditJobForm","ATSApplication",new {Id=job.Id})'">Edit</button>
+                <button class="btn btn-danger pull-right" onclick="location.href = '@Url.Action("DeleteJob","ATSApplication",new {Id=job.Id})'"> delete</button>
+            </div>
+        }
+        else
+        {
+            <div class="buttonsection" style="margin-left:2rem;">
+                        <button class="btn pull-right" onclick="location.href = '@Url.Action("AddCandidateForm","ATSApplication",new {Id=job.Id})'">Apply</button>
+            </div>
+        }
+
+      </div>
+
+            
+    </div>
+
+  </div>
+
+
+
+  </body>
+</html>
