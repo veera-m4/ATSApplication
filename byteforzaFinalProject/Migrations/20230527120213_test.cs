@@ -65,6 +65,7 @@ namespace byteforzaFinalProject.Migrations
                     ExpectedCTC = table.Column<int>(type: "int", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Resume = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NoticePeriod = table.Column<int>(type: "int", nullable: false),
                     Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PreferLocation = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Source = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -89,7 +90,8 @@ namespace byteforzaFinalProject.Migrations
                     OnProcess = table.Column<int>(type: "int", nullable: false),
                     ExperienceRequired = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PostedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    PostedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    status = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -213,7 +215,9 @@ namespace byteforzaFinalProject.Migrations
                     Tech2 = table.Column<int>(type: "int", nullable: false),
                     Hr = table.Column<int>(type: "int", nullable: false),
                     JobId = table.Column<int>(type: "int", nullable: false),
-                    AppliedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AppliedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    updatedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -239,7 +243,9 @@ namespace byteforzaFinalProject.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     InterviewPanel = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    typeOfRound = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     InterviewDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CandidateId = table.Column<int>(type: "int", nullable: false),
                     JobId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -256,6 +262,30 @@ namespace byteforzaFinalProject.Migrations
                         name: "FK_interviews_jobs_JobId",
                         column: x => x.JobId,
                         principalTable: "jobs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "feedbacks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    interviewId = table.Column<int>(type: "int", nullable: false),
+                    oopsRating = table.Column<int>(type: "int", nullable: false),
+                    logicalThinking = table.Column<int>(type: "int", nullable: false),
+                    programming = table.Column<int>(type: "int", nullable: false),
+                    status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    comment = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_feedbacks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_feedbacks_interviews_interviewId",
+                        column: x => x.interviewId,
+                        principalTable: "interviews",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -310,6 +340,11 @@ namespace byteforzaFinalProject.Migrations
                 column: "JobId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_feedbacks_interviewId",
+                table: "feedbacks",
+                column: "interviewId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_interviews_CandidateId",
                 table: "interviews",
                 column: "CandidateId");
@@ -342,13 +377,16 @@ namespace byteforzaFinalProject.Migrations
                 name: "candidatesProcess");
 
             migrationBuilder.DropTable(
-                name: "interviews");
+                name: "feedbacks");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "interviews");
 
             migrationBuilder.DropTable(
                 name: "candidates");

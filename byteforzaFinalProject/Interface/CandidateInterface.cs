@@ -19,5 +19,11 @@ namespace byteforzaFinalProject.Interface
         public Task<Job> getJobDetails(int i);
         public Task<FormResponse> scheduleInterview(ScheduleInterview scheduleInterview);
         public Task<FormResponse> AddFeedBack(AddFeedback addFeedback);
-	}
+        public List<FeedbackPageDTO> getFeedBackPageDetails();
+        public List<Object> graphData();
+        public List<InterviewScheludeDetail> getTheScheduledInterview();
+        public List<InterviewReportDetails> getInterviewReport();
+        public ReportPageDetails GetReportPageDetails();
+
+    }
 }

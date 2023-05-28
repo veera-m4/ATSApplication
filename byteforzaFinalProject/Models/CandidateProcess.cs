@@ -23,6 +23,7 @@ namespace byteforzaFinalProject.Models
         [Required]
         public string status { get; set; }
         public DateTime AppliedDate { get; set; }
+        public DateTime updatedDate { get; set; }
         public virtual Candidate candidate { get; set; }
         
 

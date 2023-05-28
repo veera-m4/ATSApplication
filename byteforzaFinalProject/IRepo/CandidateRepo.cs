@@ -128,7 +128,7 @@ namespace byteforzaFinalProject.IRepo
                                Name = c.Name,
                                Id = c.Id,
                                Experience = c.Experience,
-                               KeySkills = c.KeySkills.Split(new char[] { ',' }).ToList(),
+                               KeySkills = (c.KeySkills).Split(',', System.StringSplitOptions.None).ToList(),
 			                   CurrentCTC = c.CurrentCTC,
 							   ExpectedCTC = c.ExpectedCTC,
 							   Email = c.Email,
@@ -170,7 +170,8 @@ namespace byteforzaFinalProject.IRepo
             candidateProcess1.CandidateId = profileData.Id;
             candidateProcess1.JobId = candidate.JobId;
             candidateProcess1.AppliedDate = DateTime.Today;
-            candidateProcess1.status = "applied";
+			candidateProcess1.updatedDate = DateTime.Today;
+			candidateProcess1.status = "applied";
             await db.candidatesProcess.AddAsync(candidateProcess1);
             await db.SaveChangesAsync();
 
@@ -183,8 +184,7 @@ namespace byteforzaFinalProject.IRepo
 		{
             FormResponse formResponse = new FormResponse();
 			Interview interview = new Interview();
-			interview.InterviewDate = scheduleInterview.date_only.ToString();
-			interview.InterviewTime = scheduleInterview.TimeOnly.ToString();
+            interview.InterviewDate = scheduleInterview.dateTime;
 			interview.InterviewPanel = scheduleInterview.InterviewPanel;
 			interview.CandidateId = scheduleInterview.candidateId;
 			interview.JobId = scheduleInterview.jobId;
@@ -212,8 +212,86 @@ namespace byteforzaFinalProject.IRepo
 			return formResponse;
 
         }
-        
+        public List<FeedbackPageDTO> getFeedBackPageDetails()
+        {
+            List<FeedbackPageDTO> interviewScheludeDetails = (from f in db.feedbacks
+                                                              join i in db.interviews on f.interviewId equals i.Id
+                                                              join c in db.candidates on i.CandidateId equals c.Id
+                                                              select new FeedbackPageDTO
+                                                              {
+                                                                  Name = c.Name,
+                                                                  Interviewer = i.InterviewPanel,
+                                                                  TypeOfRound = i.typeOfRound,
+                                                                  dateOnly = DateOnly.FromDateTime(i.InterviewDate),
+                                                                  TimeOnly = new TimeOnly(i.InterviewDate.Hour, i.InterviewDate.Minute),
+                                                                  Rating = (f.logicalThinking + f.oopsRating + f.programming) / 3,
+                                                                  halfstar = ((int)((double)(f.logicalThinking + f.oopsRating + f.programming) / 3)*10) > 5 ? true :false,
+                                                                  RatingValue = (float)(f.logicalThinking + f.oopsRating + f.programming) / 3.0,
+                                                                  Email = c.Email,
+                                                                  
 
-	}
+															  }).ToList();
+            return interviewScheludeDetails;
+		}
+        public List<Object> graphData()
+        {
+            
+            int totalCandidate = db.candidates.Count();
+            int selectedCandidate = db.candidatesProcess.Where(x => x.status == "offer raised").Count();
+            int rejectedCandidate = db.candidatesProcess.Where(x => x.status == "rejected" || x.status == "will not Suit").Count();
+            int pendingCandidate = totalCandidate - (selectedCandidate + rejectedCandidate);
+            int thisWeekAppliedCandidate = (from i in db.candidatesProcess where i.updatedDate > DateTime.Now.AddDays(-7) && i.updatedDate < DateTime.Now.AddDays(-7) select i).Count();
+			int thisWeekSelectedCandidate = (from i in db.candidatesProcess where i.updatedDate > DateTime.Now.AddDays(-7) && i.updatedDate < DateTime.Now.AddDays(-7) && i.status == "offer raised" select i).Count();
+			int thisWeekRejecctedCandidate = (from i in db.candidatesProcess where i.updatedDate > DateTime.Now.AddDays(-7) && i.updatedDate < DateTime.Now.AddDays(-7) && i.status == "will not Suit" && i.status == "rejected" select i).Count();
+            int thiWeekPendingCandidate = (from i in db.candidatesProcess where i.updatedDate > DateTime.Now.AddDays(-7) && i.updatedDate < DateTime.Now.AddDays(-7) && i.status != "offer raised" && i.status != "will not Suit" && i.status != "rejected" select i).Count();
+			double completedPercentagge = ((double)db.jobs.Sum(x => x.Vaccanies) /selectedCandidate) * 100;
+            List<Object> result = new List<Object>()
+            {
+                thisWeekAppliedCandidate,totalCandidate,selectedCandidate,pendingCandidate,rejectedCandidate,thisWeekSelectedCandidate, thiWeekPendingCandidate,thisWeekRejecctedCandidate, completedPercentagge
+			};
+            return result;
+		}
+        public List<InterviewScheludeDetail> getTheScheduledInterview()
+        {
+            List<InterviewScheludeDetail> result = (from c in db.candidates
+                                                   join i in db.interviews on c.Id equals i.CandidateId
+                                                   where i.InterviewDate >= DateTime.Now
+                                                   select new InterviewScheludeDetail
+                                                   {
+                                                       Name = c.Name,
+                                                       InterviewPanel = i.InterviewPanel,
+                                                       type_of_round = i.typeOfRound,
+                                                       date_only = DateOnly.FromDateTime(i.InterviewDate),
+                                                       TimeOnly = new TimeOnly(i.InterviewDate.Hour, i.InterviewDate.Minute)
+                                                   }).ToList();
+            return result;
+        }
+        public List<InterviewReportDetails> getInterviewReport()
+        {
+            List<InterviewReportDetails> result = (from c in db.candidates
+                                                   join i in db.interviews on c.Id equals i.CandidateId
+                                                   where i.InterviewDate >= DateTime.Now
+                                                   select new InterviewReportDetails
+                                                   {
+                                                       Name = c.Name,
+                                                       InterviewPanel = i.InterviewPanel,
+                                                       result = i.Status,
+                                                       type_of_round = i.typeOfRound,
+                                                       
+
+                                                   }).ToList();
+            return result;
+        }
+        public ReportPageDetails GetReportPageDetails()
+        {
+            ReportPageDetails result = new ReportPageDetails();
+            result.candidate_Rejected = db.candidatesProcess.Where(x => x.status == "rejected" || x.status == "will not Suit").Count(); 
+            result.candidate_selected = db.candidatesProcess.Where(x => x.status == "offer raised").Count(); 
+            result.total_of_candidate = db.candidates.Count();
+            result.totalInterview = db.interviews.Count();
+            return result;
+        }
+
+    }
    
 }

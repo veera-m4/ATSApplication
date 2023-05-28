@@ -20,370 +20,48 @@ namespace byteforzaFinalProject.Controllers
 
         public async Task<ActionResult> CandidateDetail()
         {
-            ViewData["data"] = new ShowCandidateDetails() {
-                total_of_candidate = 30,
-                candidate_selected = 12,
-                candidate_on_process = 8,
-                candidate_Rejected = 10
-            };
+            List<Object> graphData = candidateRepo.graphData();
+			ViewData["data"] = new ShowCandidateDetails() {
+                total_of_candidate = (int)graphData[1],
+                candidate_selected = (int)graphData[2],
+                candidate_on_process = (int)graphData[4],
+                candidate_Rejected = (int)graphData[4]
+			};
             ViewData["job"] = await candidateRepo.jobDetails();
             ViewData["candidate"] = candidateRepo.GetCandidatePageAsync(); 
                
-             ViewData["graph"] = new List<int> { 12,8,2};
+             ViewData["graph"] = new List<Object> { graphData[2] , graphData[3] , graphData[4] };
             return View();
         }
         [HttpGet]
         public JsonResult graphData()
         {
-            return Json(new List<int> { 51, 52, 38 });
+            List<Object> graphData = candidateRepo.graphData();
+            return Json(new List<Object> { graphData[2], graphData[3], graphData[4] });
         }
         [HttpGet]
         public JsonResult HomePagegraphData()
         {
-            return Json(new List<Object> { 78.2,51, 52, 38, 51, 52, 38 });
+            List<Object> graphData = candidateRepo.graphData();
+            return Json(new List<Object> { graphData[8], graphData[2], graphData[3], graphData[4], graphData[5], graphData[6], graphData[7] });
         }
         public IActionResult ReportPage()
         {
-            ViewData["interviewReport"] = new List<InterviewReportDetails>()
-            {
-                new InterviewReportDetails()
-                {
-                    Name = "Veera manikandan",
-                    InterviewPanel = "manikandan",
-                    result = "selected",
-                    type_of_round = "tr"
-                },
-                new InterviewReportDetails()
-                {
-                    Name = "Veera manikandan",
-                    InterviewPanel = "manikandan",
-                    result = "selected",
-                    type_of_round = "tr"
-                },
-                new InterviewReportDetails()
-                {
-                    Name = "Veera manikandan",
-                    InterviewPanel = "manikandan",
-                    result = "selected",
-                    type_of_round = "tr"
-                },
-                new InterviewReportDetails()
-                {
-                    Name = "Veera manikandan",
-                    InterviewPanel = "manikandan",
-                    result = "selected",
-                    type_of_round = "tr"
-
-                },
-                new InterviewReportDetails()
-                {
-                    Name = "Veera manikandan",
-                    InterviewPanel = "manikandan",
-                    result = "selected",
-                    type_of_round = "tr"
-                },
-                new InterviewReportDetails()
-                {
-                    Name = "Veera manikandan",
-                    InterviewPanel = "manikandan",
-                    result = "selected",
-                    type_of_round = "tr"
-                },
-                new InterviewReportDetails()
-                {
-                    Name = "Veera manikandan",
-                    InterviewPanel = "manikandan",
-                    result = "selected",
-                    type_of_round = "tr"
-                }
-            };
-            ViewData["InrerviewSchedule"] = new List<InterviewScheludeDetail>()
-            {
-                new InterviewScheludeDetail()
-                {
-                    Name = "veera Manikandan",
-                    InterviewPanel = "manikandan",
-                    type_of_round = "tr",
-                    date_only = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0)
-                 },
-                new InterviewScheludeDetail()
-                {
-                    Name = "veera Manikandan",
-                    InterviewPanel = "manikandan",
-                    type_of_round = "tr",
-                    date_only = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0)
-                 },
-                new InterviewScheludeDetail()
-                {
-                    Name = "veera Manikandan",
-                    InterviewPanel = "manikandan",
-                    type_of_round = "tr",
-                    date_only = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0)
-                 },
-                new InterviewScheludeDetail()
-                {
-                    Name = "veera Manikandan",
-                    InterviewPanel = "manikandan",
-                    type_of_round = "tr",
-                    date_only = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0)
-                 },
-                new InterviewScheludeDetail()
-                {
-                    Name = "veera Manikandan",
-                    InterviewPanel = "manikandan",
-                    type_of_round = "tr",
-                    date_only = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0)
-                 },
-                new InterviewScheludeDetail()
-                {
-                    Name = "veera Manikandan",
-                    InterviewPanel = "manikandan",
-                    type_of_round = "tr",
-                    date_only = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0)
-                 },
-                new InterviewScheludeDetail()
-                {
-                    Name = "veera Manikandan",
-                    InterviewPanel = "manikandan",
-                    type_of_round = "tr",
-                    date_only = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0)
-                 },
-                new InterviewScheludeDetail()
-                {
-                    Name = "veera Manikandan",
-                    InterviewPanel = "manikandan",
-                    type_of_round = "tr",
-                    date_only = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0)
-                 }
-            };
-            ViewData["PageDetails"] = new ReportPageDetails()
-            {
-                total_of_candidate = 40,
-                totalInterview = 60,
-                candidate_on_process = 20,
-                candidate_selected = 12,
-                candidate_Rejected = 8
-            };
+            ViewData["interviewReport"] = candidateRepo.getInterviewReport();
+            ViewData["InrerviewSchedule"] = candidateRepo.getTheScheduledInterview();
+            ViewData["PageDetails"] = candidateRepo.GetReportPageDetails();
             return View();
         }
         public IActionResult HomePage()
         {
-            ViewData["InrerviewSchedule"] = new List<InterviewScheludeDetail>()
-            {
-                new InterviewScheludeDetail()
-                {
-                    Name = "veera Manikandan",
-                    InterviewPanel = "manikandan",
-                    type_of_round = "tr",
-                    date_only = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0)
-                 },
-                new InterviewScheludeDetail()
-                {
-                    Name = "veera Manikandan",
-                    InterviewPanel = "manikandan",
-                    type_of_round = "tr",
-                    date_only = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0)
-                 },
-                new InterviewScheludeDetail()
-                {
-                    Name = "veera Manikandan",
-                    InterviewPanel = "manikandan",
-                    type_of_round = "tr",
-                    date_only = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0)
-                 },
-                new InterviewScheludeDetail()
-                {
-                    Name = "veera Manikandan",
-                    InterviewPanel = "manikandan",
-                    type_of_round = "tr",
-                    date_only = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0)
-                 },
-                new InterviewScheludeDetail()
-                {
-                    Name = "veera Manikandan",
-                    InterviewPanel = "manikandan",
-                    type_of_round = "tr",
-                    date_only = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0)
-                 },
-                new InterviewScheludeDetail()
-                {
-                    Name = "veera Manikandan",
-                    InterviewPanel = "manikandan",
-                    type_of_round = "tr",
-                    date_only = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0)
-                 },
-                new InterviewScheludeDetail()
-                {
-                    Name = "veera Manikandan",
-                    InterviewPanel = "manikandan",
-                    type_of_round = "tr",
-                    date_only = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0)
-                 },
-                new InterviewScheludeDetail()
-                {
-                    Name = "veera Manikandan",
-                    InterviewPanel = "manikandan",
-                    type_of_round = "tr",
-                    date_only = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0)
-                 }
-            };
+            ViewData["InrerviewSchedule"] = candidateRepo.getTheScheduledInterview();
             ViewData["candidate"] = candidateRepo.GetCandidatePageAsync();
-            ViewData["feedback"] = new List<HomePageFeedback>() {
-                new HomePageFeedback()
-                {
-                    Name = "veera Manikandan",
-                    Interviewer = "manikandan",
-                    TypeOfRound = "tr",
-                    DateOnly = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0),
-                    Rating = 3,
-                    halfstar = true
-                },
-                new HomePageFeedback()
-                {
-                    Name = "veera Manikandan",
-                    Interviewer = "manikandan",
-                    TypeOfRound = "tr",
-                    DateOnly = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0),
-                    Rating = 3,
-                    halfstar = true
-                },
-                new HomePageFeedback()
-                {
-                    Name = "veera Manikandan",
-                    Interviewer = "manikandan",
-                    TypeOfRound = "tr",
-                    DateOnly = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0),
-                    Rating = 3,
-                    halfstar = true
-                },
-                new HomePageFeedback()
-                {
-                    Name = "veera Manikandan",
-                    Interviewer = "manikandan",
-                    TypeOfRound = "tr",
-                    DateOnly = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0),
-                    Rating = 3,
-                    halfstar = true
-                },
-                new HomePageFeedback()
-                {
-                    Name = "veera Manikandan",
-                    Interviewer = "manikandan",
-                    TypeOfRound = "tr",
-                    DateOnly = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0),
-                    Rating = 3,
-                    halfstar = true
-                },
-                new HomePageFeedback()
-                {
-                    Name = "veera Manikandan",
-                    Interviewer = "manikandan",
-                    TypeOfRound = "tr",
-                    DateOnly = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0),
-                    Rating = 3,
-                    halfstar = true
-                }
-            };
+            ViewData["feedback"] = candidateRepo.getFeedBackPageDetails();
             return View();
         }
         public IActionResult FeedbackPage()
         {
-            ViewData["feedback"] = new List<FeedbackPageDTO>() {
-                new FeedbackPageDTO()
-                {
-                    Name = "veera Manikandan",
-                    Interviewer = "manikandan",
-                    TypeOfRound = "tr",
-                    DateOnly = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0),
-                    Rating = 3,
-                    halfstar = true,
-                    RatingValue = 3.8,
-                    Email = "sutharsonv@gmail.com"
-                },
-                new FeedbackPageDTO()
-                {
-                    Name = "veera Manikandan",
-                    Interviewer = "manikandan",
-                    TypeOfRound = "tr",
-                    DateOnly = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0),
-                    Rating = 3,
-                    halfstar = true,
-                    RatingValue = 3.8,
-                    Email = "manikandanv847@gmail.com"
-                },
-                new FeedbackPageDTO()
-                {
-                    Name = "veera Manikandan",
-                    Interviewer = "manikandan",
-                    TypeOfRound = "tr",
-                    DateOnly = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0),
-                    Rating = 3,
-                    halfstar = true,
-                    RatingValue = 3.8,
-                    Email = "rubitha@gmail.com"
-                },
-                new FeedbackPageDTO()
-                {
-                    Name = "veera Manikandan",
-                    Interviewer = "manikandan",
-                    TypeOfRound = "tr",
-                    DateOnly = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0),
-                    Rating = 3,
-                    halfstar = true,
-                    RatingValue = 3.8,
-                    Email = "ruby@gmail.com"
-                },
-                new FeedbackPageDTO()
-                {
-                    Name = "veera Manikandan",
-                    Interviewer = "manikandan",
-                    TypeOfRound = "tr",
-                    DateOnly = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0),
-                    Rating = 3,
-                    halfstar = true,
-                    RatingValue = 3.8,
-                    Email = "veera@gmail.com"
-                },
-                new FeedbackPageDTO()
-                {
-                    Name = "veera Manikandan",
-                    Interviewer = "manikandan",
-                    TypeOfRound = "tr",
-                    DateOnly = new DateOnly(2022, 1, 1),
-                    TimeOnly = new TimeOnly(11, 0),
-                    Rating = 3,
-                    halfstar = true,
-                    RatingValue = 3.8,
-                    Email = "mani@gmail.com"
-                }
-            };
+            ViewData["feedback"] = candidateRepo.getFeedBackPageDetails();
             return View();
         }
         public IActionResult AddJobForm()

@@ -3,7 +3,7 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    var feedback = ViewData["feedback"] as List<HomePageFeedback>;
+    var feedback = ViewData["feedback"] as List<FeedbackPageDTO>;
     var candidate = ViewData["candidate"] as List<CandidateProfileData>;
     var schedule = ViewData["InrerviewSchedule"] as List<InterviewScheludeDetail>;
 }
@@ -270,7 +270,7 @@
                     </thead>
                     <tbody>
 
-                        @foreach (HomePageFeedback pageFeedback in feedback)
+                        @foreach (FeedbackPageDTO pageFeedback in feedback)
                         {
                             <tr>
                                 <td>@pageFeedback.Name</td>
@@ -281,7 +281,7 @@
                                     @pageFeedback.TypeOfRound
                                 </td>
                                 <td>
-                                @pageFeedback.DateOnly
+                                @pageFeedback.dateOnly
                                 </td>
                                 <td>
                                     <div>

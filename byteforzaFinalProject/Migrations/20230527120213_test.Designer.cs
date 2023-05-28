@@ -12,7 +12,7 @@ using byteforzaFinalProject.DatabaseContext;
 namespace byteforzaFinalProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230525181137_test")]
+    [Migration("20230527120213_test")]
     partial class test
     {
         /// <inheritdoc />
@@ -268,6 +268,9 @@ namespace byteforzaFinalProject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("NoticePeriod")
+                        .HasColumnType("int");
+
                     b.Property<string>("PreferLocation")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -311,6 +314,13 @@ namespace byteforzaFinalProject.Migrations
                     b.Property<int>("Tech2")
                         .HasColumnType("int");
 
+                    b.Property<string>("status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("updatedDate")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CandidateId");
@@ -318,6 +328,41 @@ namespace byteforzaFinalProject.Migrations
                     b.HasIndex("JobId");
 
                     b.ToTable("candidatesProcess");
+                });
+
+            modelBuilder.Entity("byteforzaFinalProject.Models.Feedback", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("comment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("interviewId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("logicalThinking")
+                        .HasColumnType("int");
+
+                    b.Property<int>("oopsRating")
+                        .HasColumnType("int");
+
+                    b.Property<int>("programming")
+                        .HasColumnType("int");
+
+                    b.Property<string>("status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("interviewId");
+
+                    b.ToTable("feedbacks");
                 });
 
             modelBuilder.Entity("byteforzaFinalProject.Models.Interview", b =>
@@ -340,6 +385,14 @@ namespace byteforzaFinalProject.Migrations
 
                     b.Property<int>("JobId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("typeOfRound")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -389,6 +442,10 @@ namespace byteforzaFinalProject.Migrations
 
                     b.Property<int>("Vaccanies")
                         .HasColumnType("int");
+
+                    b.Property<string>("status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -463,6 +520,17 @@ namespace byteforzaFinalProject.Migrations
                     b.Navigation("candidate");
                 });
 
+            modelBuilder.Entity("byteforzaFinalProject.Models.Feedback", b =>
+                {
+                    b.HasOne("byteforzaFinalProject.Models.Interview", "Interview")
+                        .WithMany("Feedbacks")
+                        .HasForeignKey("interviewId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Interview");
+                });
+
             modelBuilder.Entity("byteforzaFinalProject.Models.Interview", b =>
                 {
                     b.HasOne("byteforzaFinalProject.Models.Candidate", "Candidate")
@@ -487,6 +555,11 @@ namespace byteforzaFinalProject.Migrations
                     b.Navigation("Child1");
 
                     b.Navigation("Child2");
+                });
+
+            modelBuilder.Entity("byteforzaFinalProject.Models.Interview", b =>
+                {
+                    b.Navigation("Feedbacks");
                 });
 
             modelBuilder.Entity("byteforzaFinalProject.Models.Job", b =>

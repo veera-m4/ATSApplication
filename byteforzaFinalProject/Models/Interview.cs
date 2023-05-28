@@ -14,9 +14,9 @@ namespace byteforzaFinalProject.Models
         [Required]
         public string typeOfRound { get; set;}
         [Required]
-        public string  InterviewDate { get; set; }
+        public DateTime  InterviewDate { get; set; }
         [Required]
-        public string InterviewTime { get; set; }
+        public string Status { get; set; } = "scheduled";
         [ForeignKey("Candidate")] 
         public int CandidateId { get; set; }
         [ForeignKey("Job")]
@@ -24,5 +24,6 @@ namespace byteforzaFinalProject.Models
         public virtual Candidate Candidate { get; set; }
         public virtual Job job { get; set; }
         public virtual List<Feedback> Feedbacks { get; set; }
+
     }
 }
