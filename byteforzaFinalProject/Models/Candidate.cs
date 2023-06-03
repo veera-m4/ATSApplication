@@ -32,7 +32,6 @@ namespace byteforzaFinalProject.Models
         public string PreferLocation { get; set; }
         [Required]
         public string Source { get; set; }
-        [Required]
         public string Note { get; set; }
         public virtual ICollection<CandidateProcess> Child1 { get; set; }
         public virtual IList<Interview> Child2 { get;set; }

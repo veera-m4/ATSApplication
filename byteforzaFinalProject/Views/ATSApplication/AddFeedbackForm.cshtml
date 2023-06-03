@@ -1,0 +1,570 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/byteforzaFinalProject.styles.css" asp-append-version="true" />
+	<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/font-awesome.min.css">
+	<style>
+		.wrapper {
+			margin: auto;
+			width: 100%;
+			max-width: 550px;
+			background: rgba(231, 239, 248, 0.8);
+			padding: 30px;
+			border-radius: 5px;
+		}
+
+			.wrapper .title h1 {
+				color: #131313;
+				text-align: center;
+				margin-bottom: 25px;
+			}
+
+		textarea {
+			border: none;
+			outline: none;
+		}
+
+		input {
+			border: none;
+			outline: none;
+		}
+
+		select {
+			border: none;
+			outline: none;
+		}
+
+		.input-fields {
+			display: flex;
+			flex-direction: column;
+			margin-right: 4%;
+		}
+
+		.input-fields,
+		.msg {
+			width: 68%;
+		}
+
+		input:active,
+		textarea:active {
+			border: none;
+			outline: none;
+		}
+
+		.input-fields .input,
+		.msg textarea {
+			margin: 10px 0;
+			backginterviewType: #fff;
+			border: 0px;
+			border-bottom: 2px solid #1e1e1e;
+			padding: 10px;
+			color: #29292a;
+			width: 100%;
+		}
+
+		.msg textarea {
+			height: 212px;
+		}
+
+		::-webkit-input-placeholder {
+			/* Chrome/Opera/Safari */
+			color: #212121;
+		}
+
+		:-ms-input-placeholder {
+			/* IE 10+ */
+			color: #37393a;
+		}
+
+		.btn {
+			background-color: #39b7dd;
+			text-align: center;
+			padding: 10px;
+			border-radius: 20px;
+			color: #2a2929;
+			cursor: pointer;
+			text-transform: uppercase;
+			width: auto;
+		}
+
+		.buttons-section {
+			display: flex;
+			justify-content: space-between;
+		}
+
+		@@media screen and (max-width: 600px) {
+			.contact-form {
+				flex-direction: column;
+			}
+
+			.msg textarea {
+				height: 80px;
+			}
+
+			.input-fields,
+			.msg {
+				width: 100%;
+			}
+		}
+
+		.autocomplete {
+			position: relative;
+			display: inline-block;
+		}
+
+		input {
+			border: 1px solid transparent;
+			backginterviewType-color: #f1f1f1;
+			padding: 10px;
+			font-size: 16px;
+		}
+
+			input[type=text] {
+				backginterviewType-color: #f1f1f1;
+				width: 100%;
+			}
+
+			input[type=submit] {
+				backginterviewType-color: DodgerBlue;
+				color: #fff;
+				cursor: pointer;
+			}
+
+				input[type=submit]:hover {
+					backginterviewType-color: green;
+				}
+
+		.autocomplete-items {
+			position: absolute;
+			border: 1px solid #d4d4d4;
+			background-color: #fff;
+			overflow-y: scroll;
+			max-height: 600px;
+			border-bottom: none;
+			border-top: none;
+			z-index: 99;
+			left: 0;
+			right: 0;
+		}
+
+			.autocomplete-items div {
+				padding: 10px;
+				cursor: pointer;
+				backginterviewType-color: #fff;
+				border-bottom: 1px solid #d4d4d4;
+			}
+
+				/*when hovering an item:*/
+				.autocomplete-items div:hover {
+					backginterviewType-color: #e9e9e9;
+				}
+
+		/*when navigating through the items using the arrow keys:*/
+		.autocomplete-active {
+			backginterviewType-color: DodgerBlue !important;
+			color: #ffffff;
+		}
+
+		.ratings-wrapper {
+			border: thin solid #999;
+			display: inline-block;
+			margin-bottom: 20px;
+		}
+
+		.ratings {
+			display: flex;
+			flex-direction: row-reverse;
+		}
+
+			.ratings span {
+				cursor: pointer;
+				transition: color .2s;
+				font-size: 50px;
+			}
+
+				.ratings span:hover {
+					color: orange;
+				}
+
+					.ratings span:hover ~ span {
+						color: orange;
+					}
+
+				.ratings span[data-clicked] {
+					color: orange;
+				}
+
+					.ratings span[data-clicked] ~ span {
+						color: orange;
+					}
+
+		.reset {
+			font-size: 18px;
+			text-decoration: none;
+			background-color: #4f5a78;
+			padding: 15px 50px;
+			display: inline-block;
+			margin-top: 20px;
+			color: #fff;
+			border: none;
+			cursor: pointer;
+		}
+
+			.reset:hover {
+				filter: brightness(1.2);
+			}
+	</style>
+</head>
+
+<body>
+
+	<div class="wrapper">
+		<div class="wrapper">
+			<div class="title">
+				<h1>Schelude Interview</h1>
+			</div>
+			<div class="contact-form">
+				<div class="input-fields">
+					<label><strong>select the job in below field</strong></label>
+					<div class="autocomplete" style="width:300px;">
+						<input id="myInput" class="input" type="text" Name="clgName" placeholder="start type the job Name">
+					</div>
+					<div class="ratings-wrapper">
+						<strong> Logical thinking </strong>
+						<div data-productName="Logical_thing" class="ratings">
+							<span data-rating="5">&#9733;</span>
+							<span data-rating="4">&#9733;</span>
+							<span data-rating="3">&#9733;</span>
+							<span data-rating="2">&#9733;</span>
+							<span data-rating="1">&#9733;</span>
+						</div>
+					</div>
+					<br>
+					<div class="ratings-wrapper">
+						<strong> Programming </strong>
+						<div data-productName="programming" class="ratings">
+							<span data-rating="5">&#9733;</span>
+							<span data-rating="4">&#9733;</span>
+							<span data-rating="3">&#9733;</span>
+							<span data-rating="2">&#9733;</span>
+							<span data-rating="1">&#9733;</span>
+						</div>
+					</div>
+					<br>
+					<div class="ratings-wrapper">
+						<strong> OOPS </strong>
+						<div data-productName="oops" class="ratings">
+							<span data-rating="5">&#9733;</span>
+							<span data-rating="4">&#9733;</span>
+							<span data-rating="3">&#9733;</span>
+							<span data-rating="2">&#9733;</span>
+							<span data-rating="1">&#9733;</span>
+						</div>
+					</div>
+					<div class="msg">
+						<textarea id="comments" placeholder="comments"></textarea>
+
+					</div>
+					<label>
+						<strong>select the result</strong>
+
+					</label>
+					<select class="input" id="result">
+						<option value="select one" selected disabled>select one</option>
+						<option value="selected">shortlist for next round</option>
+						<option value="rejected">not suited</option>
+					</select>
+				</div>
+				
+
+					<div class="buttons-section">
+						<div class="btn" onclick="location.href = '@Url.Action("CandidateDetail","ATSApplication")'">cancel</div>
+						<div class="btn" id="btnqrt">Add</div>
+
+					</div>
+				</div>
+			</div>
+
+
+
+			<script>
+				jQuery(document).ready(function () {
+
+
+
+
+
+
+					jQuery.ajax({
+						url: '@Url.Action("getNewFeedbackList", "ATSApplication")',
+						type: "GET",
+						dataType: "json",
+						contentType: "application/json; charset=utf-8",
+						success: function (data) {
+							let stars = document.querySelectorAll(".ratings span");
+							let products = document.querySelectorAll(".ratings");
+							let ratings = [];
+
+							for (let star of stars) {
+								star.addEventListener("click", function () {
+
+									let children = star.parentElement.children;
+									for (let child of children) {
+										if (child.getAttribute("data-clicked")) {
+											return false;
+										}
+									}
+
+									this.setAttribute("data-clicked", "true");
+									let rating = this.dataset.rating;
+									let product_name = this.parentElement.dataset.productName;
+									let data = {
+										rating1: rating,
+										productName: product_name,
+
+									}
+									console.log(rating);
+									ratings.push(data);
+									localStorage.setItem("rating", JSON.stringify(ratings));
+								});
+							}
+
+							if (localStorage.getItem("rating")) {
+								ratings = JSON.parse(localStorage.getItem("rating"));
+								for (let rating of ratings) {
+									for (let product of products) {
+										if (product.dataset.productid == rating["product-id"]) {
+											let reverse = Array.from(product.children).reverse();
+											let index = parseInt(rating["rating"]) - 1;
+											reverse[index].setAttribute("data-clicked", "true");
+											console.log(rating);
+										}
+									}
+								}
+							}
+
+							var interview_id;
+							var candidateList = data;
+							function autocomplete(inp, arr) {
+								var currentFocus;
+								inp.addEventListener("input", function (e) {
+									console.log(arr);
+									console.log(arr.length);
+									var a, b, i, val = this.value;
+									closeAllLists();
+									if (!val) { return false; }
+									currentFocus = -1;
+									a = document.createElement("DIV");
+									a.setAttribute("id", this.id + "autocomplete-list");
+									a.setAttribute("class", "autocomplete-items");
+									this.parentNode.appendChild(a);
+
+									for (i = 0; i < arr.length; i++) {
+										console.log(arr);
+										console.log(typeof arr[i].candidateName);
+										console.log(typeof arr[i].jobName);
+										console.log(typeof arr[i].candidateId);
+										console.log(typeof arr[i].interviewType);
+
+										if ((arr[i].candidateName != null) && (arr[i].candidateName.substr(0, val.length).toUpperCase() == val.toUpperCase())) {
+
+											b = document.createElement("DIV");
+											b.innerHTML = arr[i].candidateId + " ";
+											b.innerHTML += "<strong>" + (arr[i].candidateName.substr(0, val.length)) + "</strong>";
+											b.innerHTML += arr[i].candidateName.substr(val.length) + " ";
+											b.innerHTML += arr[i].jobName + " ";
+											b.innerHTML += arr[i].interviewType;
+											b.innerHTML += "<input type='hidden' value='" + arr[i].candidateId + " " + arr[i].candidateName + " " + arr[i].jobName + " " + arr[i].interviewType + "'" + " data-interviewid = " + arr[i].interviewId + "> ";
+											b.addEventListener("click", function (e) {
+												console.log(e);
+												inp.value = this.getElementsByTagName("input")[0].value;
+												v = this.getElementsByTagName("input")[0];
+												interview_id = v.dataset.interviewid;
+												console.log(interview_id);
+
+												closeAllLists();
+											});
+											a.appendChild(b);
+										}
+										else if (("" + arr[i].candidateId).substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+
+											b = document.createElement("DIV");
+											b.innerHTML = "<strong>" + (("" + arr[i].candidateId).substr(0, val.length)) + "</strong>";
+											b.innerHTML += ("" + arr[i].candidateId).substr(val.length) + " ";
+											b.innerHTML += arr[i].candidateName + " ";
+											b.innerHTML += arr[i].jobName + " ";
+											b.innerHTML += arr[i].interviewType;
+											b.innerHTML += "<input type='hidden' value='" + arr[i].candidateId + " " + arr[i].candidateName + " " + arr[i].jobName + " " + arr[i].interviewType + "'" + " data-interviewid = " + arr[i].interviewId + "> ";
+											b.addEventListener("click", function (e) {
+												inp.value = this.getElementsByTagName("input")[0].value;
+												v = this.getElementsByTagName("input")[0];
+												interview_id = v.dataset.interviewid;
+												console.log(interview_id);
+												closeAllLists();
+											});
+											a.appendChild(b);
+										}
+										else if ((arr[i].interviewType != null) && (arr[i].interviewType).substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+
+											b = document.createElement("DIV");
+											b.innerHTML = arr[i].candidateId + " ";
+											b.innerHTML += arr[i].candidateName + " ";
+											b.innerHTML += arr[i].jobName + " ";
+											b.innerHTML += "<strong>" + (arr[i].interviewType.substr(0, val.length)) + "</strong>";
+											b.innerHTML += arr[i].interviewType.substr(val.length) + " ";
+											b.innerHTML += "<input type='hidden' value='" + arr[i].candidateId + " " + arr[i].candidateName + " " + arr[i].jobName + " " + arr[i].interviewType + "'" + " data-interviewid = " + arr[i].interviewId + "> ";
+											b.addEventListener("click", function (e) {
+												inp.value = this.getElementsByTagName("input")[0].value;
+												v = this.getElementsByTagName("input")[0];
+												interview_id = v.dataset.interviewid;
+												console.log(interview_id);
+												closeAllLists();
+											});
+											a.appendChild(b);
+										}
+										else if ((arr[i].jobName != null) && (arr[i].jobName).substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+
+											b = document.createElement("DIV");
+											b.innerHTML = arr[i].candidateId + " ";
+											b.innerHTML += arr[i].candidateName + " ";
+											b.innerHTML += "<strong>" + (arr[i].jobName.substr(0, val.length)) + "</strong>";
+											b.innerHTML += arr[i].jobName.substr(val.length) + " ";
+											b.innerHTML += arr[i].interviewType;
+											b.innerHTML += "<input type='hidden' value='" + arr[i].candidateId + " " + arr[i].candidateName + " " + arr[i].jobName + " " + arr[i].interviewType + "'" + " data-interviewid = " + arr[i].interviewId + "> ";
+											b.addEventListener("click", function (e) {
+												inp.value = this.getElementsByTagName("input")[0].value;
+												v = this.getElementsByTagName("input")[0];
+												interview_id = v.dataset.interviewid;
+												console.log(interview_id);
+												closeAllLists();
+											});
+											a.appendChild(b);
+										}
+									}
+								});
+
+								inp.addEventListener("keydown", function (e) {
+									var x = document.getElementById(this.id + "autocomplete-list");
+									console.log(" 1  " + x);
+									if (x) x = x.getElementsByTagName("div");
+									if (e.keyCode == 40) {
+										currentFocus++;
+										addActive(x);
+									} else if (e.keyCode == 38) {
+										currentFocus--;
+										addActive(x);
+									} else if (e.keyCode == 13) {
+										e.preventDefault();
+										if (currentFocus > -1) {
+											if (x) x[currentFocus].click();
+										}
+									}
+								});
+								function addActive(x) {
+
+									if (!x) return false;
+									removeActive(x);
+									if (currentFocus >= x.length) currentFocus = 0;
+									if (currentFocus < 0) currentFocus = (x.length - 1);
+									x[currentFocus].classList.add("autocomplete-active");
+								}
+								function removeActive(x) {
+									for (var i = 0; i < x.length; i++) {
+										x[i].classList.remove("autocomplete-active");
+									}
+								}
+								function closeAllLists(elmnt) {
+									var x = document.getElementsByClassName("autocomplete-items");
+									for (var i = 0; i < x.length; i++) {
+										if (elmnt != x[i] && elmnt != inp) {
+											x[i].parentNode.removeChild(x[i]);
+										}
+									}
+								}
+								document.addEventListener("click", function (e) {
+									closeAllLists(e.target);
+								});
+							}
+
+
+							autocomplete(document.getElementById("myInput"), candidateList);
+
+							jQuery("#btnqrt").click(function () {
+								var dataset = new FormData;
+								dataset.append("interviewId", interview_id);
+								for (int i = 0; i < ratings.length;i++)
+								{
+									if (rating[i].productName == "Logical_thing")
+									{
+										dataset.append("logicalThinking", rating[i].rating1);
+									}
+									else if (rating[i].productName == "oops") {
+										dataset.append("oopsRating", rating[i].rating1);
+									}
+									else if (rating[i].productName == "programming") {
+										dataset.append("programming", rating[i].rating1);
+									}
+								}
+
+								dataset.append("status", jQuery("#result").val());
+								dataset.append("comment", jQuery("#comments").val());
+								jQuery.ajax({
+									type: "POST",
+									url: '@Url.Action("AddNewInterviewDetails", "ATSApplication")',
+									data: dataset,
+									dataType: 'json',
+									contentType: false,
+									processData: false,
+									success: function (data) {
+
+										console.log("data received successfully");
+										window.location.href = '@Url.Action("FeedbackPage")';
+									},
+									error: function (error) {
+										console.log(error);
+									}
+								});
+
+							});
+
+
+
+
+
+
+							console.log(data.length);
+							console.log(data);
+							console.log("data received successfully");
+						},
+						error: function (error) {
+							console.log(error);
+						}
+					});
+
+
+				});
+			</script>
+
+		</div>
+		<script>
+		</script>
+
+</body>
+
+
+</html>

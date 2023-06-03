@@ -3,8 +3,8 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    var job = ViewData["job"] as List<JobDTO>;
     var appliedJob = ViewData["appliedJob"] as List<AppliedJobDTO>;
+    var job = ViewData["job"] as List<JobDTO>;
 }
 <!DOCTYPE html>
 <html>
@@ -106,7 +106,8 @@
 
         .main-body {
             background-color: #efefef;
-            margin: 1rem;
+            margin: 2rem;
+            padding-top : 2rem;
         }
 
         .card-text {
@@ -151,7 +152,7 @@
             margin: 5px;
             background-color: rgb(228, 240, 243);
             width: 275px;
-            height: 200px;
+            height: 100px;
             padding: 1rem 1rem 1rem 1rem;
             border-radius: 2rem;
         }
@@ -185,51 +186,21 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
         }
+        .AppliedJobs
+        {
+            background-color :#fff;
+            margin :2rem;
+        }
     </style>
 </head>
 <body>
     <div class="main-body">
-        <div class="AppliedJobs">
-            <table class="table" id="myTable">
-                <thead>
-                    <tr>
-                        <th>S.no</th>
-                        <th>Role</th>
-                        <th>Location</th>
-                        <th>Applied Date</th>
-                        <th>Status</th>
-                        <th>date</th>
-                        <th>rating</th>
-                        <th>Details</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    @for(int i=0;i<appliedJob.Count;i++)
-                    {
-                        <tr>
-                            <td>@i</td>
-                            <td>@appliedJob[i].Role</td>
-                            <td>
-                                @appliedJob[i].Location
-                            </td>
-                            <td>
-                                @appliedJob[i].AppliedDate
-                            </td>
-                            <td>
-                                @appliedJob[i].status
-                            </td>
-                            
-                        </tr>
-
-                    }
-                </tbody>
-        </div>
         <div class="job-list">
-            @foreach (JobDTO j in job)
+                
+            @foreach(JobDTO j in job)
             {
 
-                <div class="job-details" onclick="location.href = '@Url.Action("JobDetails","ATSApplication",new {id=j.Id})'">
+                <div class="job-details" onclick="location.href = '@Url.Action("JobDetails","CandidateApplication",new {id= j.Id})'">
                     <div class="job-left">
                         <div class="job-designation">
                             @j.Role
@@ -262,6 +233,40 @@
                 </div>
             }
         </div>
+        <div class="AppliedJobs">
+            <table class="table" id="myTable">
+                <thead>
+                    <tr>
+                        <th>S.no</th>
+                        <th>Role</th>
+                        <th>Location</th>
+                        <th>Applied Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @for(int i=0;i<appliedJob.Count;i++)
+                    {
+                        <tr>
+                            <td>@i</td>
+                            <td>@appliedJob[i].Role</td>
+                            <td>
+                                @appliedJob[i].Location
+                            </td>
+                            <td>
+                                @appliedJob[i].AppliedDate
+                            </td>
+                            <td>
+                                @appliedJob[i].status
+                            </td>
+                            
+                        </tr>
+
+                    }
+                </tbody>
+        </div>
+        
     </div>
 
 </body>

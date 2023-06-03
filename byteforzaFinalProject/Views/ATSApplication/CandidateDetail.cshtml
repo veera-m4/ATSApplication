@@ -397,8 +397,7 @@
                                                 <span class="label label-info">@can.Status</span>
                                             </td>
                                             <td>
-                                                <button class="btn btn-danger pull-right"><span class="glyphicon glyphicon-trash"></span> delete</button>
-                                                <button class="btn btn-danger pull-right"><span class="glyphicon glyphicon-pencil"></span> Edit</button>
+                                                <button class="btn btn-danger pull-right" onclick="location.href = '@Url.Action("IndividualCandidateDetails","ATSApplication",new { candidateId=can.Id, jobId = can.JobId })'"><span class="glyphicon glyphicon-pencil"></span> details</button>
                                             </td>
                                         </tr>
                                     }

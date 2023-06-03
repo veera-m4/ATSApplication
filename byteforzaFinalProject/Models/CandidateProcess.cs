@@ -12,11 +12,11 @@ namespace byteforzaFinalProject.Models
         [ForeignKey("Candidate")]
         public int CandidateId { get; set; }
         [ForeignKey("Interview")]
-        public int Tech1 { get; set; }
+        public int? Tech1 { get; set; }
         [ForeignKey("Interview")]
-        public int Tech2 { get; set; } = 0;
+        public int? Tech2 { get; set; } = 0;
         [ForeignKey("Interview")]
-        public int Hr { get; set; } = 0;
+        public int? Hr { get; set; } = 0;
         [Required]
         [ForeignKey("Job")]
         public int JobId { get; set; }

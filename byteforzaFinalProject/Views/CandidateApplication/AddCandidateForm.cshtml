@@ -1,0 +1,387 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+	<title>Search Box</title>
+
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<style>
+		.wrapper{
+		  position: relative;
+		  margin: auto;
+		  width: 100%;
+		  max-width: 550px;
+		  background: rgba(231, 239, 248, 0.8);
+		  padding: 30px;
+		  border-radius: 5px;
+		  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+		}
+
+		.wrapper .title h1{
+		  color: #131313;
+		  text-align: center;
+		  margin-bottom: 25px;
+		}
+		textarea 
+		{
+			border: none;
+			outline: none;
+		}
+		input
+		{
+			border: none;
+			outline: none;
+		}
+		select
+		{
+			border: none;
+			outline: none;
+		}
+		.input-fields{
+		  display: flex;
+		  flex-direction: column;
+		  margin-right: 4%;
+		}
+
+		.input-fields,
+		.msg{
+		  width: 68%;
+		}
+		input:active,
+		textarea:active{
+			border: none;
+			outline: none;
+		}
+		.input-fields .input,
+		.msg textarea{
+		  margin: 10px 0;
+		  background: transparent;
+		  border: 0px;
+		  border-bottom: 2px solid #1e1e1e;
+		  padding: 10px;
+		  color: #29292a;
+		  width: 100%;
+		}
+
+		.msg textarea{
+		  height: 212px;
+		}
+
+		::-webkit-input-placeholder {
+		  /* Chrome/Opera/Safari */
+		  color: #212121;
+		}
+		:-ms-input-placeholder {
+		  /* IE 10+ */
+		  color: #37393a;
+		}
+
+		.buttons-section>.btn {
+			background: #39b7dd;
+			text-align: center;
+			border-radius: 20px;
+			color: #2a2929;
+			cursor: pointer;
+			text-transform: uppercase;
+			width: auto;
+		}
+
+			.buttons-section > .btn:hover {
+			cursor: pointer
+		}
+
+		.buttons-section
+		{
+			display: flex;
+			justify-content: space-between;
+		}
+
+		@@media screen and (max-width: 600px){
+		  .contact-form{
+			flex-direction: column;
+		  }
+		  .msg textarea{
+			height: 80px;
+		  }
+		  .input-fields,
+		  .msg{
+			width: 100%;
+		  }
+		}
+		ul {
+		  display: grid;
+		  grid-template-columns: repeat(3, 1fr);
+		  margin: 0;
+		  padding: 0;
+		}
+
+
+		.myUL .myUL>li {
+		  cursor: pointer;
+		  position: relative;
+		  list-style-type :none;
+		  left: 45%;
+		  padding: 4px;
+		  font-size: 18px;
+		  transition: 0.2s;
+		  width: 10%;
+		  -webkit-user-select: none;
+		  -moz-user-select: none;
+		  -ms-user-select: none;
+		  user-select: none;
+		}
+		.addBtn
+		{
+		  background-color: #feefee;
+		  padding: 10px;
+		  margin-top: 10px;
+		  border-radius: 25%;
+		  position: relative;
+		}
+
+
+
+
+
+
+		.autocomplete {
+		  position: relative;
+		  display: inline-block;
+
+		}
+
+
+
+		.autocomplete-items {
+		  position: absolute;
+		  background-color: #fff;
+		  border: 1px solid #d4d4d4;
+		  overflow-y: scroll;
+		  max-height: 600px;
+		  border-bottom: none;
+		  border-top: none;
+		  z-index: 99;
+		  left: 0;
+		  right: 0;
+		}
+
+		.autocomplete-items div {
+		  padding: 10px;
+		  cursor: pointer;
+		  background-color: #fff;
+		  border-bottom: 1px solid #d4d4d4;
+		}
+
+		/*when hovering an item:*/
+		.autocomplete-items div:hover {
+		  background-color: #e9e9e9;
+		}
+
+		/*when navigating through the items using the arrow keys:*/
+		.autocomplete-active {
+		  background-color: DodgerBlue !important;
+		  color: #ffffff;
+		}
+	</style>
+
+</head>
+
+<body>
+
+	<div class="wrapper">
+		<div class="title">
+			<h1>Add Candidate details</h1>
+		</div>
+		<div class="contact-form">
+			<div class="input-fields">
+				<input type="text" class="input" placeholder="Name" id="name" />
+				<input type="email" class="input" placeholder="Enter your Email" id="email" value = "@ViewBag.email" disabled />
+				<br />
+				<label>
+					<strong>
+						Experience
+					</strong>
+				</label>
+				<input type="number" class="input" min="0" value=0 id="experience" />
+				<br />
+				<label>
+					<strong>
+						enter your skillsets
+					</strong>
+				</label>
+				<ul id="myUL">
+				</ul>
+				<div id="myDIV" class="header">
+					<input type="text" class="input" id="myInput" placeholder="skill..." />
+					<span onclick="newElement()" class="addBtn">Add</span>
+				</div>
+
+				<br />
+				<label>
+					<strong>
+						Enter your current CTC in lakhs
+					</strong>
+				</label>
+				<input type="number" class="input" value=0 id="currentCTC" />
+				<br />
+				<label>
+					<strong>
+						Enter your Expected CTC in lakhs
+					</strong>
+				</label>
+				<input type="number" class="input" value=0 id="expectedCTC" />
+				<input type="text" class="input" placeholder="Enter your current location" id="currentLocation" />
+				<input type="text" class="input" placeholder="Enter your prefered location" id="preferedLocation" />
+				<br/>
+				<label>
+					<strong>
+						Enter the source
+					</strong>
+				</label>
+				<select class="input" id="source">
+					<option value="select one" selected disabled>select one</option>
+					<option value="naurkri">naurkri</option>
+					<option value="LinkedIn">LinkedIn</option>
+					<option value="others">others</option>
+				</select>
+				<br />
+				<label> upload your resume in pdf or (.doc)word file</label>
+				<br />
+				<input type="file" class="file" accept=".doc, .pdf" id="Resume" />
+				<br />
+
+			</div>
+		</div>
+		<div class="buttons-section">
+			<div class="btn" id="addbbtn">Add</div>
+			<div class="btn">cancel</div>
+		</div>
+	</div>
+
+
+
+	<script>
+		var skillSet = [];
+		var myNodelist = document.getElementsByTagName("LI");
+		var i;
+		for (i = 0; i < myNodelist.length; i++) {
+			var span = document.createElement("SPAN");
+			var txt = document.createTextNode("\u00D7");
+			span.className = "close";
+			span.appendChild(txt);
+			myNodelist[i].appendChild(span);
+		}
+
+		var close = document.getElementsByClassName("close");
+		var i;
+		for (i = 0; i < close.length; i++) {
+			close[i].onclick = function () {
+				var div = this.parentElement;
+				div.style.display = "none";
+			}
+		}
+
+		var list = document.querySelector('ul');
+		list.addEventListener('click', function (ev) {
+			if (ev.target.tagName === 'LI') {
+				ev.target.classList.toggle('checked');
+			}
+		}, false);
+
+		function newElement() {
+			var li = document.createElement("li");
+			var inputValue = document.getElementById("myInput").value;
+			skillSet.push(inputValue);
+			var t = document.createTextNode(inputValue);
+			li.appendChild(t);
+			if (inputValue === '') {
+				alert("You must write something!");
+			} else {
+				document.getElementById("myUL").appendChild(li);
+			}
+			document.getElementById("myInput").value = "";
+
+			var span = document.createElement("SPAN");
+			var txt = document.createTextNode("\u00D7");
+			span.className = "close";
+			span.appendChild(txt);
+			li.appendChild(span);
+
+			for (i = 0; i < close.length; i++) {
+				close[i].onclick = function () {
+					var div = this.parentElement;
+					div.style.display = "none";
+				}
+			}
+		}
+		jQuery(document).ready(function () {
+			jQuery("#addbbtn").click(function () {
+				console.log("clicked");
+				var name = jQuery("#name").val();
+				var email = jQuery("#email").val();
+				var expectedCTC = jQuery("#expectedCTC").val();
+				var experience = jQuery("#experience").val();
+				var currentCTC = jQuery("#currentCTC").val();
+				var currentLocation = jQuery("#currentLocation").val();
+				var preferedLocation = jQuery("#preferedLocation").val();
+				var source = jQuery("#source").val();
+				var Resume = jQuery("#Resume").get(0).files;
+				if (name === "") {
+					alert("Name column cannot be empty");
+				}
+				else {
+					console.log("clicked1");
+					var dataset = new FormData;
+					dataset.append("JobId",@ViewBag.job);
+					dataset.append("Name", name);
+					dataset.append("Email", email);
+					dataset.append("Experience", experience);
+					dataset.append("Skill", skillSet);
+					dataset.append("expectedCTC", expectedCTC);
+					dataset.append("currentCTC", currentCTC);
+					dataset.append("currentLocation", currentLocation);
+					dataset.append("preferedLocation", preferedLocation);
+					dataset.append("source", source);
+					dataset.append("Resume", Resume[0]);
+					jQuery.ajax({
+						type: "POST",
+						url: '@Url.Action("AddCandidate","CandidateApplication")',
+						data: dataset,
+						dataType: 'json',
+						contentType :false,
+						processData :false,
+						success: function (res) {
+							if (res.result === "success") {
+								window.location.href = '@Url.Action("Index")';
+							}
+							else {
+								alert("Error occured while submitting form! contact Administrator");
+							}
+
+						},
+						error: function (err) {
+							console.log(err)
+						}
+
+					});
+
+				}
+			});
+		});
+
+	</script>
+</body>
+
+
+</html>
+

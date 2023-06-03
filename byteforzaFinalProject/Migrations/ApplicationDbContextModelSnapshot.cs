@@ -299,16 +299,16 @@ namespace byteforzaFinalProject.Migrations
                     b.Property<int>("CandidateId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Hr")
+                    b.Property<int?>("Hr")
                         .HasColumnType("int");
 
                     b.Property<int>("JobId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Tech1")
+                    b.Property<int?>("Tech1")
                         .HasColumnType("int");
 
-                    b.Property<int>("Tech2")
+                    b.Property<int?>("Tech2")
                         .HasColumnType("int");
 
                     b.Property<string>("status")

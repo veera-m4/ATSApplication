@@ -1,0 +1,142 @@
+﻿@using byteforzaFinalProject.DTO;
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    var details = ViewData["individual"] as CandidateDetails;
+}
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/byteforzaFinalProject.styles.css" asp-append-version="true" />
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+</head>
+<body>
+
+
+    <div class="content">
+
+        <div class="container sub-container">
+
+            <div class="table-responsive">
+
+                <table class="table custom-table">
+                    <thead>
+                        <tr>
+                            <th class="table-heading" scope="col"><strong>Candidate</strong> </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                designation
+                            </td>
+                            <td>
+                                <strong>@details.jobName</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Name
+                            </td>
+                            <td>
+                                <strong>@details.Name</strong>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>
+                                Experience
+                            </td>
+                            <td>
+                                <strong>>@details.Experience</strong>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>
+                                key Skill
+                            </td>
+                            <td>
+                                @foreach (string i in details.KeySkills)
+                                {
+                                    <strong>
+                                        @i
+                                    </strong>
+                                }
+                                
+
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>
+                                Current CTC
+                            </td>
+                            <td>
+                                <strong>
+                                    @details.CurrentCTC
+                                </strong>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Expected CTC
+                            </td>
+                            <td>
+                                <strong>@details.ExpectedCTC</strong>
+
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                Notice period 
+                            </td>
+                            <td>
+                                <strong>
+                                    @details.Notice
+                                </strong>
+
+                            </td>
+
+                        </tr>
+                        @if(details.Status == "applied")
+                        {
+                            <tr>
+                            <td>To Approve the candidate</td>
+                            <td>
+                                    <button class="btn btn-danger pull-right" onclick="location.href = '@Url.Action("ApproveApplication","ATSApplication",new {jobId = details.JobId ,candidateId=details.Id })'">approve</button>
+                                    
+                            </tr>
+                            <tr>
+                                <td>To decline the application</td>
+                                <td>
+                                    <button class="btn btn-danger pull-right" onclick="location.href = '@Url.Action("DeleteJob","ATSApplication",new {jobId = details.JobId ,candidateId=details.Id })'"> decine</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+</body>
+</html>

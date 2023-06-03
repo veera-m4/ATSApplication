@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "oCuaohHtnbf/7uQAHxZSRWb7KGUchfiAOXYwjykJIr4=",
+  "Hash": "Mf7wH0w/0JxRjXU3vXWFirt8cj1o3E1KJZwzylm8r1c=",
   "Source": "byteforzaFinalProject",
   "BasePath": "_content/byteforzaFinalProject",
   "Mode": "Default",
@@ -1851,6 +1851,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "C:\\Users\\hp\\source\\repos\\byteforzaFinalProject\\byteforzaFinalProject\\wwwroot\\Files\\Veera Manikandan_1653568612637.pdf",
+      "SourceId": "byteforzaFinalProject",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\hp\\source\\repos\\byteforzaFinalProject\\byteforzaFinalProject\\wwwroot\\",
+      "BasePath": "_content/byteforzaFinalProject",
+      "RelativePath": "Files/Veera Manikandan_1653568612637.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Files\\Veera Manikandan_1653568612637.pdf"
     },
     {
       "Identity": "C:\\Users\\hp\\source\\repos\\byteforzaFinalProject\\byteforzaFinalProject\\wwwroot\\images\\5a2196bda45b33.0645048615121507176732.png",

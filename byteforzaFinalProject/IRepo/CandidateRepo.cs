@@ -35,6 +35,7 @@ namespace byteforzaFinalProject.IRepo
                 newJob.ExperienceRequired = newJobDTO.ExperienceRequired;
                 newJob.Type = newJobDTO.Type;
                 newJob.PostedDate = DateTime.Today;
+                newJob.status = "recruiting";
                 await db.jobs.AddAsync(newJob);
                 await db.SaveChangesAsync();
                 formResponse.Message = null;
@@ -127,6 +128,7 @@ namespace byteforzaFinalProject.IRepo
                            select new CandidateProfileData {
                                Name = c.Name,
                                Id = c.Id,
+                               JobId = cp.JobId,
                                Experience = c.Experience,
                                KeySkills = (c.KeySkills).Split(',', System.StringSplitOptions.None).ToList(),
 			                   CurrentCTC = c.CurrentCTC,
@@ -147,7 +149,13 @@ namespace byteforzaFinalProject.IRepo
         {
             FormResponse formResponse = new FormResponse();
 			Candidate profileData = await db.candidates.FirstOrDefaultAsync(x => x.Email == candidate.Email);
-            CandidateProcess candidateProcess = await db.candidatesProcess.FirstOrDefaultAsync(x => x.JobId == candidate.JobId && profileData.Id == x.CandidateId);
+            CandidateProcess candidateProcess = null;
+
+			if (profileData != null)
+            {
+				candidateProcess = await db.candidatesProcess.FirstOrDefaultAsync(x => x.JobId == candidate.JobId && profileData.Id == x.CandidateId);
+			}
+            
             if(candidateProcess != null) {
                 formResponse.result = "failed";
                 formResponse.Message = "You have alreadry applied for job";
@@ -165,22 +173,80 @@ namespace byteforzaFinalProject.IRepo
             profileData.Location = candidate.currentLocation;
             profileData.PreferLocation = candidate.preferedLocation;
             profileData.Source = candidate.source;
+            profileData.Note = "";
             await db.candidates.AddAsync(profileData);
-            CandidateProcess candidateProcess1 = new CandidateProcess();
-            candidateProcess1.CandidateId = profileData.Id;
-            candidateProcess1.JobId = candidate.JobId;
-            candidateProcess1.AppliedDate = DateTime.Today;
-			candidateProcess1.updatedDate = DateTime.Today;
-			candidateProcess1.status = "applied";
-            await db.candidatesProcess.AddAsync(candidateProcess1);
+            
             await db.SaveChangesAsync();
-
+            Thread.Sleep(5000);
+            await AddCandidateProcess(candidate.JobId, candidate.Email);
             formResponse.result = "success";
             formResponse.Message = "Suucessfully applied  for the job";
 			return formResponse;
 
 		}
-		public async Task<FormResponse> scheduleInterview(ScheduleInterview scheduleInterview)
+        public async Task<FormResponse> AddCandidateProcess(int jobId, string email)
+        {
+            FormResponse formResponse = new FormResponse();
+            Candidate candidate = db.candidates.FirstOrDefault(x => x.Email == email);
+            CandidateProcess candidateProcess1 = new CandidateProcess();
+            candidateProcess1.CandidateId = candidate.Id;
+            candidateProcess1.JobId = jobId;
+            candidateProcess1.AppliedDate = DateTime.Today;
+            candidateProcess1.updatedDate = DateTime.Today;
+            candidateProcess1.status = "applied";
+            await db.candidatesProcess.AddAsync(candidateProcess1);
+            await db.SaveChangesAsync();
+            formResponse.result = "success";
+            formResponse.Message = "Suucessfully applied  for the job";
+            return formResponse;
+        }
+
+        public async Task<FormResponse> addProfile(ProfileDTO candidate)
+        {
+            FormResponse formResponse = new FormResponse();
+            Candidate profileData = await db.candidates.FirstOrDefaultAsync(x => x.Email == candidate.Email);
+
+            if (profileData != null)
+            {
+                profileData.Name = candidate.Name;
+                profileData.Email = candidate.Email;
+                profileData.CurrentCTC = candidate.currentCTC;
+                profileData.NoticePeriod = candidate.NoticePeriod;
+                profileData.ExpectedCTC = candidate.expectedCTC;
+                profileData.Resume = await fileRepo.saveAndGetFileName(candidate.Resume);
+                profileData.Experience = candidate.Experience;
+                profileData.KeySkills = string.Join(",", candidate.Skill.ToArray());
+                profileData.Location = candidate.currentLocation;
+                profileData.PreferLocation = candidate.preferedLocation;
+                profileData.Source = candidate.source;
+                profileData.Note = "";
+                await db.SaveChangesAsync();
+                formResponse.result = "success";
+                formResponse.Message = "Suucessfully applied  for the job";
+                return formResponse;
+            }
+
+            profileData = new Candidate();
+            profileData.Name = candidate.Name;
+            profileData.Email = candidate.Email;
+            profileData.CurrentCTC = candidate.currentCTC;
+            profileData.NoticePeriod = candidate.NoticePeriod;
+            profileData.ExpectedCTC = candidate.expectedCTC;
+            profileData.Resume = await fileRepo.saveAndGetFileName(candidate.Resume);
+            profileData.Experience = candidate.Experience;
+            profileData.KeySkills = string.Join(",", candidate.Skill.ToArray());
+            profileData.Location = candidate.currentLocation;
+            profileData.PreferLocation = candidate.preferedLocation;
+            profileData.Source = candidate.source;
+            profileData.Note = "";
+            await db.candidates.AddAsync(profileData);
+            await db.SaveChangesAsync();
+            formResponse.result = "success";
+            formResponse.Message = "Suucessfully applied  for the job";
+            return formResponse;
+        }
+
+        public async Task<FormResponse> scheduleInterview(ScheduleInterview scheduleInterview)
 		{
             FormResponse formResponse = new FormResponse();
 			Interview interview = new Interview();
@@ -191,7 +257,22 @@ namespace byteforzaFinalProject.IRepo
 			interview.typeOfRound = scheduleInterview.type_of_round;
 			await db.interviews.AddAsync(interview);
             await db.SaveChangesAsync();
-            formResponse.result = "success";
+            Thread.Sleep(5000);
+            CandidateProcess candidateProcess = db.candidatesProcess.FirstOrDefault(x => x.CandidateId == scheduleInterview.candidateId && x.JobId == scheduleInterview.jobId);
+            if(candidateProcess.status == "tr1")
+            {
+                candidateProcess.Tech1 = db.interviews.FirstOrDefault(x => x.typeOfRound == scheduleInterview.type_of_round && x.CandidateId == scheduleInterview.candidateId && x.JobId == scheduleInterview.jobId).Id;
+            }
+            else if (candidateProcess.status == "tr2")
+			{
+				candidateProcess.Tech1 = db.interviews.FirstOrDefault(x => x.typeOfRound == scheduleInterview.type_of_round && x.CandidateId == scheduleInterview.candidateId && x.JobId == scheduleInterview.jobId).Id;
+			}
+            else if (candidateProcess.status == "hr")
+			{
+				candidateProcess.Tech1 = db.interviews.FirstOrDefault(x => x.typeOfRound == scheduleInterview.type_of_round && x.CandidateId == scheduleInterview.candidateId && x.JobId == scheduleInterview.jobId).Id;
+			}
+			await db.SaveChangesAsync();
+			formResponse.result = "success";
             return formResponse;
 
 
@@ -270,7 +351,7 @@ namespace byteforzaFinalProject.IRepo
         {
             List<InterviewReportDetails> result = (from c in db.candidates
                                                    join i in db.interviews on c.Id equals i.CandidateId
-                                                   where i.InterviewDate >= DateTime.Now
+                                                   where i.InterviewDate <= DateTime.Now
                                                    select new InterviewReportDetails
                                                    {
                                                        Name = c.Name,
@@ -291,7 +372,160 @@ namespace byteforzaFinalProject.IRepo
             result.totalInterview = db.interviews.Count();
             return result;
         }
+        public List<AppliedJobDTO> CandidateAppliedJob(string email)
+        {
+            List<AppliedJobDTO> result = (from c in db.candidates
+                     join cp in db.candidatesProcess on c.Id equals cp.CandidateId
+                     join j in db.jobs on cp.JobId equals j.Id
+                     where c.Email == email
+                      select new AppliedJobDTO
+                      {
 
-    }
+						 Role = j.Role,
+		                AppliedDate = cp.AppliedDate,
+		                Location = j.Location,
+		                jobProcessId = j.Id,
+		                status = cp.status
+	                  }).ToList();
+
+            return result;
+        }
+        public bool isJobApplied(int jobId, string email)
+        {
+            var candidate = db.candidates.FirstOrDefault(x => x.Email == email);
+            if(candidate == null)
+            {
+                return false;
+            }
+            var result = db.candidatesProcess.FirstOrDefault(x => x.JobId == jobId && x.CandidateId == candidate.Id);
+            if(result == null)
+            {
+                return false;
+            }
+            return true;
+        }
+        public List<InterviewListDTO> getListForSchedule()
+        {
+            List<InterviewListDTO> result = (from c in db.candidates
+                          join cp in db.candidatesProcess on c.Id equals cp.CandidateId
+                          join j in db.jobs on cp.JobId equals j.Id
+                          where ((cp.status == "h1" && cp.Hr==null) || (cp.status == "tr1" && cp.Tech1 == null) || (cp.status == "tr2" && cp.Tech2 == null)) 
+                          select new InterviewListDTO
+                          {
+                              CandidateId = c.Id,
+                              Name = c.Name,
+                              interviewType = cp.status == "tr1" ? "technical 1" : (cp.status == "tr2" ? "technical 2" : "General hr"),
+                              jobId = cp.JobId,
+                              jobName = j.Role
+
+                          }).ToList();
+            return result;
+        }
+        public CandidateDetails getIndividualDetails(int candidateId, int jobId)
+        {
+            CandidateDetails result = (from c in db.candidates
+                                           join cp in db.candidatesProcess on c.Id equals cp.CandidateId
+                                           join j in db.jobs on cp.JobId equals j.Id
+                                           where c.Id == candidateId && cp.JobId == jobId
+                                           select new CandidateDetails
+                                           {
+                                               Name = c.Name,
+                                               Id = c.Id,
+                                               JobId = cp.JobId,
+                                               Experience = c.Experience,
+                                               KeySkills = (c.KeySkills).Split(',', System.StringSplitOptions.None).ToList(),
+                                               CurrentCTC = c.CurrentCTC,
+                                               ExpectedCTC = c.ExpectedCTC,
+                                               Email = c.Email,
+                                               Status = cp.status,
+                                               Notice = c.NoticePeriod,
+                                               jobName = j.Role
+                                           }).FirstOrDefault( );
+            CandidateProcess candidateProcess = (from cp in db.candidatesProcess
+                                                 where cp.CandidateId == candidateId && cp.JobId == jobId
+                                                 select cp).FirstOrDefault();
+            if (candidateProcess.Hr != null)
+            {
+                result.hrId = candidateProcess.Hr;
+                result.tr1Id = candidateProcess.Tech1;
+                result.tr2Id = candidateProcess.Tech2;
+
+            }
+           else if(candidateProcess.Hr == null && candidateProcess.Tech1 == null && candidateProcess.Tech2 == null)
+            {
+                result.hrId = null;
+                result.tr1Id = null;
+                result.tr2Id = null;
+                result.LastestStatus = null;
+            }
+            else if (candidateProcess.Hr == null  && candidateProcess.Tech2 == null)
+            {
+                result.hrId = null;
+                result.tr1Id = candidateProcess.Tech1;
+                Interview interview = db.interviews.FirstOrDefault(x => x.Id == candidateProcess.Tech1);
+                if(interview != null) {
+                    result.LastestStatus = interview.Status;
+                }
+                result.tr2Id = null;
+            }
+            else if (candidateProcess.Hr == null)
+            {
+                result.hrId = null;
+                result.tr1Id = candidateProcess.Tech1;
+                Interview interview = db.interviews.FirstOrDefault(x => x.Id == candidateProcess.Tech2);
+                if (interview != null)
+                {
+                    result.LastestStatus = interview.Status;
+                }
+                result.tr2Id = candidateProcess.Tech2;
+            }
+            else 
+            {
+                result.hrId = candidateProcess.Hr;
+                result.tr1Id = candidateProcess.Tech1;
+                Interview interview = db.interviews.FirstOrDefault(x => x.Id == candidateProcess.Hr);
+                if (interview != null)
+                {
+                    result.LastestStatus = interview.Status;
+                }
+                result.tr2Id = candidateProcess.Tech2;
+            }
+            return result;
+
+        }
+        public void approveApplication(int candidateId,int jobId)
+        {
+            CandidateProcess candidateProcess = (from cp in db.candidatesProcess
+                                                 where cp.CandidateId == candidateId && cp.JobId == jobId
+                                                 select cp).FirstOrDefault();
+            candidateProcess.status = "tr1";
+            db.SaveChanges();
+        }
+        public  async void declineApproval(int candidateId ,int  jobId)
+        {
+            CandidateProcess candidateProcess = (from cp in db.candidatesProcess
+                                                 where cp.CandidateId == candidateId && cp.JobId == jobId
+                                                 select cp).FirstOrDefault();
+            candidateProcess.status = "not siuted";
+            db.SaveChanges();
+        }
+
+        public List<NewFeedbackList> getNewFeedbackList()
+        {
+            List<NewFeedbackList> result = (from i in db.interviews
+                                            join c in db.candidates on i.CandidateId equals c.Id
+                                            join j in db.jobs on i.JobId equals j.Id
+                                            where i.Status == "scheduled" && i.InterviewDate < DateTime.Now
+                                            select new NewFeedbackList
+                                            {
+                                                CandidateId= i.CandidateId,
+                                                CandidateName = c.Name,
+                                                InterviewId = i.Id,
+                                                InterviewType = i.typeOfRound,
+                                                JobName = j.Role
+                                            }).ToList();
+            return result;
+         }
+	}
    
 }

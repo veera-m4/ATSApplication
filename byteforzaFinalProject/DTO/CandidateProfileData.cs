@@ -3,6 +3,7 @@
     public class CandidateProfileData
     {
         public int Id { get; set; }
+        public int JobId { get; set; }
         public string Name { get; set; }
         public int Experience { get; set; }
         public List<string> KeySkills { get; set; }

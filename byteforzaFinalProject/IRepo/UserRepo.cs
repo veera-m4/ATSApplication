@@ -1,4 +1,4 @@
-﻿using byteforzaFinalProject.DatabaseContext;
+﻿﻿using byteforzaFinalProject.DatabaseContext;
 using byteforzaFinalProject.DTO;
 using byteforzaFinalProject.Interface;
 using byteforzaFinalProject.Models;
@@ -110,9 +110,38 @@ namespace byteforzaFinalProject.IRepo
 			{
 				await userManager.AddToRoleAsync(user, model.Role);
 			}
+			Thread.Sleep(5000);
+            var user1 = await userManager.FindByNameAsync(model.Email);
+            var signInResult = await signInManager.PasswordSignInAsync(user1, model.password, false, true);
+            if (signInResult.Succeeded)
+            {
+                var userRoles = await userManager.GetRolesAsync(user1);
+                var authClaims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Email, user1.Email),
+                };
 
-			status.result = "success";
+                foreach (var userRole in userRoles)
+                {
+                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+                }
+                status.result = "success";
+                status.Message = "Logged in successfully";
+            }
+            else if (signInResult.IsLockedOut)
+            {
+                status.result = "failed";
+                status.Message = "User is locked out";
+            }
+            else
+            {
+                status.result = "failed";
+                status.Message = "Error on logging in";
+            }
+            status.result = "success";
 			return status;
 		}
+
+		
 	}
 }

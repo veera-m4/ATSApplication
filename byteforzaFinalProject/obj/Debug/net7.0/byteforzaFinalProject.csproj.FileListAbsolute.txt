@@ -582,3 +582,4 @@ C:\Users\hp\source\repos\byteforzaFinalProject\byteforzaFinalProject\bin\Debug\n
 C:\Users\hp\source\repos\byteforzaFinalProject\byteforzaFinalProject\bin\Debug\net7.0\Mono.TextTemplating.dll
 C:\Users\hp\source\repos\byteforzaFinalProject\byteforzaFinalProject\bin\Debug\net7.0\System.CodeDom.dll
 C:\Users\hp\source\repos\byteforzaFinalProject\byteforzaFinalProject\bin\Debug\net7.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\hp\source\repos\byteforzaFinalProject\byteforzaFinalProject\bin\Debug\net7.0\Microsoft.AspNet.Identity.Core.dll

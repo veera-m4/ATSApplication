@@ -24,6 +24,15 @@ namespace byteforzaFinalProject.Interface
         public List<InterviewScheludeDetail> getTheScheduledInterview();
         public List<InterviewReportDetails> getInterviewReport();
         public ReportPageDetails GetReportPageDetails();
+        public List<AppliedJobDTO> CandidateAppliedJob(string email);
+        public bool isJobApplied(int jobId, string email);
+        public Task<FormResponse> AddCandidateProcess(int jobId, string email);
+        public Task<FormResponse> addProfile(ProfileDTO candidate);
+        public List<InterviewListDTO> getListForSchedule();
+        public CandidateDetails getIndividualDetails(int candidateId, int jobId);
+        public void approveApplication(int candidateId, int jobId);
+        public void declineApproval(int candidateId, int jobId);
+        public List<NewFeedbackList> getNewFeedbackList();
 
-    }
+	}
 }

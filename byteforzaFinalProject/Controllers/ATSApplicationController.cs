@@ -1,5 +1,6 @@
 ﻿using byteforzaFinalProject.DTO;
 using byteforzaFinalProject.Interface;
+using byteforzaFinalProject.IRepo;
 using byteforzaFinalProject.Models;
 using byteforzaFinalProject.Response;
 using Microsoft.AspNetCore.Http;
@@ -12,7 +13,7 @@ namespace byteforzaFinalProject.Controllers
 {
     public class ATSApplicationController : Controller
     {
-        CandidateInterface candidateRepo;
+		private readonly CandidateInterface candidateRepo;
         public ATSApplicationController(CandidateInterface candidateRepo)
         {
             this.candidateRepo = candidateRepo;
@@ -97,15 +98,51 @@ namespace byteforzaFinalProject.Controllers
         {
             return Ok(candidateRepo.IsEmailAlreadyExists(email));
         }
-        public async  Task<IActionResult> AddCandidateForm()
+        public IActionResult ScheduleInterviewList()
+        {
+            List<InterviewListDTO> interviewLists = candidateRepo.getListForSchedule();
+            return Json(interviewLists);
+        }
+        public IActionResult getInterviewPage()
+        {
+            return View();
+        }
+        public IActionResult IndividualCandidateDetails(int candidateId , int jobId)
+        {
+            ViewData["individual"] = candidateRepo.getIndividualDetails(candidateId, jobId);
+            return View();
+        }
+        public async Task<IActionResult> ApproveApplication(int candidateId, int jobId)
+        {
+            candidateRepo.approveApplication(candidateId, jobId);
+            return RedirectToAction("CandidateDetail");
+        }
+        public async Task<IActionResult> DeclineApplication(int candidateId, int jobId)
+        {
+            candidateRepo.declineApproval(candidateId, jobId);
+            return RedirectToAction("CandidateDetail");
+        }
+        public IActionResult AddNewInterview()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult AddCandidate(NewCandidateFormDTO candidateRegisterDTO)
+        public async Task<IActionResult> AddNewInterviewDetails(ScheduleInterview scheduleInterview)
         {
-            candidateRepo.SaveCandidateDetailsAsync(candidateRegisterDTO);
-            return RedirectToAction("AddCandidateForm");
+            FormResponse formResponse = (await candidateRepo.scheduleInterview(scheduleInterview));
+            return Json(formResponse);
+        }
+        public IActionResult AddFeedbackForm()
+        {
+            return View();
+        }
+        public IActionResult getNewFeedbackList()
+        {
+            return Json(candidateRepo.getNewFeedbackList());
+        }
+        public async Task<IActionResult> AddNewFeedback(AddFeedback addFeedback)
+        {
+            return Ok(Json(await candidateRepo.AddFeedBack(addFeedback));
         }
     }
 }

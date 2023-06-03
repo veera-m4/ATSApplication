@@ -3,6 +3,7 @@
 *@
 @{
     var job = ViewData["job"] as Job;
+
 }
 
 
@@ -135,19 +136,11 @@
             </tr>
           </tbody>
         </table>
-        @if(User.IsInRole("staff"))
-        {
-            <div class="buttonsection" style="margin-left:2rem;">
-                <button class="btn btn-danger pull-right" onclick="location.href = '@Url.Action("EditJobForm","ATSApplication",new {Id=job.Id})'">Edit</button>
-                <button class="btn btn-danger pull-right" onclick="location.href = '@Url.Action("DeleteJob","ATSApplication",new {Id=job.Id})'"> delete</button>
-            </div>
-        }
-        else
-        {
-            <div class="buttonsection" style="margin-left:2rem;">
-                        <button class="btn pull-right" onclick="location.href = '@Url.Action("AddCandidateForm","ATSApplication",new {Id=job.Id})'">Apply</button>
-            </div>
-        }
+        <div class="buttonsection" style="margin-left:2rem;">
+            <button class="btn btn-danger pull-right" onclick="location.href = '@Url.Action("EditJobForm","ATSApplication",new {Id=job.Id})'">Edit</button>
+            <button class="btn btn-danger pull-right" onclick="location.href = '@Url.Action("DeleteJob","ATSApplication",new {Id=job.Id})'"> delete</button>
+        </div>
+        
 
       </div>
 

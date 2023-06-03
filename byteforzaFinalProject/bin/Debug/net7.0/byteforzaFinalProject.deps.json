@@ -36,6 +36,7 @@
       "byteforzaFinalProject/1.0.0": {
         "dependencies": {
           "Duende.IdentityServer.AspNetIdentity": "6.3.0",
+          "Microsoft.AspNet.Identity.Core": "2.2.3",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "7.0.5",
           "Microsoft.AspNetCore.Identity.UI": "7.0.5",
           "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": "7.0.5",
@@ -455,6 +456,17 @@
       "jQuery.UI.Core/1.8.9": {
         "dependencies": {
           "jQuery": "1.4.4"
+        }
+      },
+      "Microsoft.AspNet.Identity.Core/2.2.3": {
+        "runtime": {
+          "lib/net45/Microsoft.AspNet.Identity.Core.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.2.3.11125"
+          }
+        },
+        "compile": {
+          "lib/net45/Microsoft.AspNet.Identity.Core.dll": {}
         }
       },
       "Microsoft.AspNetCore.Authentication.OpenIdConnect/7.0.0": {
@@ -4885,6 +4897,13 @@
       "sha512": "sha512-Sib0IXtCSVnA9wX6i0enHxHTZmBW0mLncfjtjjU3wWUMnQgmTxlenvOZBKUqpFjA0/nFQgsJqsANO74YphTc+g==",
       "path": "jquery.ui.core/1.8.9",
       "hashPath": "jquery.ui.core.1.8.9.nupkg.sha512"
+    },
+    "Microsoft.AspNet.Identity.Core/2.2.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Mv5FpoaxspE8hlWLE4r1IdZtovg/OyFgVRhxQbx47J4sqdLImN1hnM1lnwCj+/wLmqtqFk/RYMoZ5GAcwm/00g==",
+      "path": "microsoft.aspnet.identity.core/2.2.3",
+      "hashPath": "microsoft.aspnet.identity.core.2.2.3.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Authentication.OpenIdConnect/7.0.0": {
       "type": "package",
