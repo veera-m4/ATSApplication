@@ -11,10 +11,12 @@ using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using byteforzaFinalProject.Models;
 using byteforzaFinalProject.Response;
 using Microsoft.DotNet.MSIdentity.Shared;
+using Microsoft.AspNetCore.Authorization;
 
 namespace byteforzaFinalProject.Controllers
 {
-	public class CandidateApplicationController : Controller
+    [Authorize]
+    public class CandidateApplicationController : Controller
 	{
 		private readonly CandidateInterface candidateRepo;
         private readonly ApplicationDbContext db;

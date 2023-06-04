@@ -7,9 +7,10 @@
 }
 <html>
     <head>
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <link href="./style.css" rel="stylesheet">
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/byteforzaFinalProject.styles.css" asp-append-version="true" />
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/font-awesome.min.css">
@@ -69,6 +70,11 @@
             width: auto;
             margin:1rem;
         }
+
+        .btn-primary {
+            border-radius: 3rem;
+            background-color: #a3e4eb;
+        }
     </style>
     </head>
     <body>
@@ -120,7 +126,7 @@
                             </td>
                             <td>
                                 <div class="rating">
-                                    <p>@pageFeedback.RatingValue</p>
+                                    <p>@System.Math.Round(pageFeedback.RatingValue,2)</p>
                                     @for (int i = 0; i < pageFeedback.Rating; i++)
                                     {
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#f4f813;" class="bi bi-star-fill" viewBox="0 0 16 16">
@@ -153,7 +159,7 @@
                                 </div>
                             </td>
                             <td>
-
+                            <a href = '@Url.Action("getFeedbackDetails","ATSApplication",new { id=pageFeedback.id })' class="btn btn-primary">See details</a>
                             </td>
                         </tr>
 

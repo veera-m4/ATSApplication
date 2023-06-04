@@ -341,7 +341,7 @@
                 const progress = document.querySelector('.progress-done');
                 progress.style.width = data[0].toString() + '%';
                 progress.style.opacity = 1;
-                progress.innerHTML = data[0].toString() + '%';
+                progress.innerHTML = data[0].toFixed(2).toString() + '%';
 
 
                 var xValues = ["Selected", "pending", "rejected"];

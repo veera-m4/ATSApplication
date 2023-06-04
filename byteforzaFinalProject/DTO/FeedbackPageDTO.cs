@@ -1,7 +1,11 @@
-﻿namespace byteforzaFinalProject.DTO
+﻿using Microsoft.CodeAnalysis.Elfie.Model.Tree;
+
+namespace byteforzaFinalProject.DTO
 {
     public class FeedbackPageDTO
     {
+        public int id { get; set; }
+        public int candidateId { get; set; }
         public string Name { get; set; }
         public string Interviewer { get; set; }
         public string TypeOfRound { get; set; }

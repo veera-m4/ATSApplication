@@ -332,31 +332,18 @@
 
 									this.setAttribute("data-clicked", "true");
 									let rating = this.dataset.rating;
-									let product_name = this.parentElement.dataset.productName;
+									let product_name = this.parentElement.dataset.productname;
 									let data = {
 										rating1: rating,
 										productName: product_name,
 
 									}
 									console.log(rating);
+									console.log(product_name);
 									ratings.push(data);
-									localStorage.setItem("rating", JSON.stringify(ratings));
 								});
 							}
 
-							if (localStorage.getItem("rating")) {
-								ratings = JSON.parse(localStorage.getItem("rating"));
-								for (let rating of ratings) {
-									for (let product of products) {
-										if (product.dataset.productid == rating["product-id"]) {
-											let reverse = Array.from(product.children).reverse();
-											let index = parseInt(rating["rating"]) - 1;
-											reverse[index].setAttribute("data-clicked", "true");
-											console.log(rating);
-										}
-									}
-								}
-							}
 
 							var interview_id;
 							var candidateList = data;
@@ -507,25 +494,27 @@
 							jQuery("#btnqrt").click(function () {
 								var dataset = new FormData;
 								dataset.append("interviewId", interview_id);
-								for (int i = 0; i < ratings.length;i++)
+								for (let i = 0; i < ratings.length;i++)
 								{
-									if (rating[i].productName == "Logical_thing")
+									if (ratings[i].productName == "Logical_thing")
 									{
-										dataset.append("logicalThinking", rating[i].rating1);
+										dataset.append("logicalThinking", ratings[i].rating1);
 									}
-									else if (rating[i].productName == "oops") {
-										dataset.append("oopsRating", rating[i].rating1);
+								else if (ratings[i].productName == "oops") {
+										dataset.append("oopsRating", ratings[i].rating1);
 									}
-									else if (rating[i].productName == "programming") {
-										dataset.append("programming", rating[i].rating1);
+								else if (ratings[i].productName == "programming") {
+									dataset.append("programming", ratings[i].rating1);
 									}
 								}
 
+								console.log(dataset);
+								console.log(ratings);
 								dataset.append("status", jQuery("#result").val());
 								dataset.append("comment", jQuery("#comments").val());
 								jQuery.ajax({
 									type: "POST",
-									url: '@Url.Action("AddNewInterviewDetails", "ATSApplication")',
+									url: '@Url.Action("AddNewFeedback", "ATSApplication")',
 									data: dataset,
 									dataType: 'json',
 									contentType: false,
@@ -533,7 +522,7 @@
 									success: function (data) {
 
 										console.log("data received successfully");
-										window.location.href = '@Url.Action("FeedbackPage")';
+								window.location.href = '@Url.Action("FeedbackPage")';
 									},
 									error: function (error) {
 										console.log(error);

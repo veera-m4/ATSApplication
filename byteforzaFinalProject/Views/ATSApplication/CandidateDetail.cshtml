@@ -200,7 +200,7 @@
                         <div class="card-body">
                             <h5 class="card-title">Total Number of Candidate applied</h5>
                             <p class="card-text">@data.total_of_candidate</p>
-                            <a href="#" class="btn btn-primary">See details</a>
+                            <a href="#candidate-details" class="btn btn-primary">See details</a>
                         </div>
 
                     </div>
@@ -209,15 +209,15 @@
                         <div class="card-body">
                             <h5 class="card-title">Number of Candidate selected</h5>
                             <p class="card-text">@data.candidate_selected</p>
-                            <a href="#" class="btn btn-primary">See details</a>
+                            <a href="#candidate-details" class="btn btn-primary">See details</a>
                         </div>
                     </div>
                     <div class="card" style="width: 14rem;">
                         <img class="card-img-top" src="~/images/Screenshot 2023-05-12 010414.png" alt="Candidate-logo">
                         <div class="card-body">
                             <h5 class="card-title">Number of Candidate pending</h5>
-                            <p class="card-text" id="no-pending"@data.candidate_on_process></p>
-                            <a href="#" class="btn btn-primary">See details</a>
+                            <p class="card-text" id="no-pending">@data.candidate_on_process</p>
+                            <a href="#candidate-details" class="btn btn-primary">See details</a>
                         </div>
                     </div>
                     <div class="card" style="width: 14rem;">
@@ -225,7 +225,7 @@
                         <div class="card-body">
                             <h5 class="card-title">Number of Candidate rejected</h5>
                             <p class="card-text">@data.candidate_Rejected</p>
-                            <a href="#" class="btn btn-primary">See details</a>
+                            <a href="#candidate-details" class="btn btn-primary">See details</a>
                         </div>
                     </div>
                 </div>
@@ -291,7 +291,8 @@
             </div>
 
             <div class="row">
-                <div class="col-md-12" style="display:flex;">	<h2>recent jobs</h2> <button class="btn btn-danger pull-right" style="border-radius :31pxrem; margin-left:3rem" onclick="location.href = '@Url.Action("AddJobForm","ATSApplication")'">Edit</button></div>
+                <div class="col-md-12" style="display:flex;">	<h2>recent jobs</h2> 
+                    <button style="margin-left:2rem; margin-bottom :1rem;" class="btn btn-danger pull-right" onclick="location.href = '@Url.Action("AddJobForm","ATSApplication")'"><span class="glyphicon glyphicon-plus"></span> Add</button>
             </div>
             <div class="job-list">
                 @foreach(JobDTO j in job)
@@ -350,14 +351,13 @@
             <div class="row">
                 <div class="col-md-12">	<h2>Candidate progress</h2> </div>
             </div>
-            <div class="row">
+            <div class="row" id="candidate-details">
                 <div class="col-md-12">
                     <div class="widget blank no-padding">
                         <div class="panel panel-default">
                             <div class="table-head-section">
                                 <div class="panel-heading">
                                     <p>Individual Candidate Interview progress</p>
-                                    <button class="btn btn-danger pull-right"><span class="glyphicon glyphicon-plus"></span> Add</button>
                                 </div>
                             </div>
                             <table class="table">

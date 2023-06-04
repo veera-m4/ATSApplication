@@ -33,6 +33,8 @@ namespace byteforzaFinalProject.Interface
         public void approveApplication(int candidateId, int jobId);
         public void declineApproval(int candidateId, int jobId);
         public List<NewFeedbackList> getNewFeedbackList();
+        public SingleFeedbackDetails GetSingleFeedbackDetails(int id);
 
-	}
+
+    }
 }

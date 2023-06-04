@@ -95,14 +95,17 @@ namespace byteforzaFinalProject.IRepo
                 result.Add(new JobDTO
                 {
 
-					Id = j.Id,
-		            Role= j.Role,
-		            Location = j.Location,
-		            Type =j.Type,
-		            Vaccanies =j.Vaccanies,
-		            ExperienceRequired =j.ExperienceRequired,
-		            Description = j.Description,
-	            });
+                    Id = j.Id,
+                    Role = j.Role,
+                    Location = j.Location,
+                    Type = j.Type,
+                    Vaccanies = j.Vaccanies,
+                    ExperienceRequired = j.ExperienceRequired,
+                    Description = j.Description,
+                    Selected = j.Selected,
+                    OnProcess = j.OnProcess,
+                    Applied = (from cp in db.candidatesProcess where cp.JobId == j.Id select cp).ToList().Count()
+                }); ;
             }
             return result;
         }
@@ -265,11 +268,11 @@ namespace byteforzaFinalProject.IRepo
             }
             else if (candidateProcess.status == "tr2")
 			{
-				candidateProcess.Tech1 = db.interviews.FirstOrDefault(x => x.typeOfRound == scheduleInterview.type_of_round && x.CandidateId == scheduleInterview.candidateId && x.JobId == scheduleInterview.jobId).Id;
+				candidateProcess.Tech2 = db.interviews.FirstOrDefault(x => x.typeOfRound == scheduleInterview.type_of_round && x.CandidateId == scheduleInterview.candidateId && x.JobId == scheduleInterview.jobId).Id;
 			}
             else if (candidateProcess.status == "hr")
 			{
-				candidateProcess.Tech1 = db.interviews.FirstOrDefault(x => x.typeOfRound == scheduleInterview.type_of_round && x.CandidateId == scheduleInterview.candidateId && x.JobId == scheduleInterview.jobId).Id;
+				candidateProcess.Hr = db.interviews.FirstOrDefault(x => x.typeOfRound == scheduleInterview.type_of_round && x.CandidateId == scheduleInterview.candidateId && x.JobId == scheduleInterview.jobId).Id;
 			}
 			await db.SaveChangesAsync();
 			formResponse.result = "success";
@@ -287,8 +290,41 @@ namespace byteforzaFinalProject.IRepo
             feedback.status = addFeedback.status;
             feedback.comment = addFeedback.comment;
             feedback.interviewId = addFeedback.interviewId;
+            Interview interview = (from i in db.interviews
+                                  where i.Id == addFeedback.interviewId
+                                  select i).FirstOrDefault();
+            CandidateProcess candidateProcess = (from cp in db.candidatesProcess
+                                                 where cp.CandidateId == interview.CandidateId && cp.JobId == interview.JobId
+                                                 select cp).FirstOrDefault();
+            if(addFeedback.status == "selected")
+            {
+				if (candidateProcess.status == "tr1")
+				{
+                    candidateProcess.status = "tr2";
+                    interview.Status = "selected";
+				}
+				else if (candidateProcess.status == "tr2")
+				{
+					candidateProcess.status = "hr";
+					interview.Status = "selected";
+				}
+                else if (candidateProcess.status == "hr")
+				{
+                    Job job = (from j in db.jobs
+                               where j.Id == interview.JobId
+                               select j).FirstOrDefault();
+                    job.Selected += 1;
+					candidateProcess.status = "offer raised";
+					interview.Status = "selected";
+				}
+			}
+            else
+            {
+				candidateProcess.status = "rejected";
+				interview.Status = "rejected";
+			}
             await db.feedbacks.AddAsync(feedback);
-            await db.AddRangeAsync();
+            await db.SaveChangesAsync();
 			formResponse.result = "success";
 			return formResponse;
 
@@ -300,6 +336,8 @@ namespace byteforzaFinalProject.IRepo
                                                               join c in db.candidates on i.CandidateId equals c.Id
                                                               select new FeedbackPageDTO
                                                               {
+                                                                  id = f.Id,
+                                                                  candidateId = c.Id,
                                                                   Name = c.Name,
                                                                   Interviewer = i.InterviewPanel,
                                                                   TypeOfRound = i.typeOfRound,
@@ -317,15 +355,15 @@ namespace byteforzaFinalProject.IRepo
         public List<Object> graphData()
         {
             
-            int totalCandidate = db.candidates.Count();
+            int totalCandidate = db.candidatesProcess.Count();
             int selectedCandidate = db.candidatesProcess.Where(x => x.status == "offer raised").Count();
             int rejectedCandidate = db.candidatesProcess.Where(x => x.status == "rejected" || x.status == "will not Suit").Count();
             int pendingCandidate = totalCandidate - (selectedCandidate + rejectedCandidate);
-            int thisWeekAppliedCandidate = (from i in db.candidatesProcess where i.updatedDate > DateTime.Now.AddDays(-7) && i.updatedDate < DateTime.Now.AddDays(-7) select i).Count();
-			int thisWeekSelectedCandidate = (from i in db.candidatesProcess where i.updatedDate > DateTime.Now.AddDays(-7) && i.updatedDate < DateTime.Now.AddDays(-7) && i.status == "offer raised" select i).Count();
-			int thisWeekRejecctedCandidate = (from i in db.candidatesProcess where i.updatedDate > DateTime.Now.AddDays(-7) && i.updatedDate < DateTime.Now.AddDays(-7) && i.status == "will not Suit" && i.status == "rejected" select i).Count();
-            int thiWeekPendingCandidate = (from i in db.candidatesProcess where i.updatedDate > DateTime.Now.AddDays(-7) && i.updatedDate < DateTime.Now.AddDays(-7) && i.status != "offer raised" && i.status != "will not Suit" && i.status != "rejected" select i).Count();
-			double completedPercentagge = ((double)db.jobs.Sum(x => x.Vaccanies) /selectedCandidate) * 100;
+            int thisWeekAppliedCandidate = (from i in db.candidatesProcess where i.updatedDate > DateTime.Now.AddDays(-7) && i.updatedDate < DateTime.Now select i).Count();
+			int thisWeekSelectedCandidate = (from i in db.candidatesProcess where i.updatedDate > DateTime.Now.AddDays(-7) && i.updatedDate < DateTime.Now && i.status == "offer raised" select i).Count();
+			int thisWeekRejecctedCandidate = (from i in db.candidatesProcess where i.updatedDate > DateTime.Now.AddDays(-7) && i.updatedDate < DateTime.Now && i.status == "not siuted" || i.status == "rejected" select i).Count();
+            int thiWeekPendingCandidate = (from i in db.candidatesProcess where i.updatedDate > DateTime.Now.AddDays(-7) && i.updatedDate < DateTime.Now && i.status != "offer raised" && i.status != "not siuted" && i.status != "rejected" select i).Count();
+			double completedPercentagge = ((double) selectedCandidate/ (double)db.jobs.Sum(x => x.Vaccanies)) * 100;
             List<Object> result = new List<Object>()
             {
                 thisWeekAppliedCandidate,totalCandidate,selectedCandidate,pendingCandidate,rejectedCandidate,thisWeekSelectedCandidate, thiWeekPendingCandidate,thisWeekRejecctedCandidate, completedPercentagge
@@ -366,7 +404,7 @@ namespace byteforzaFinalProject.IRepo
         public ReportPageDetails GetReportPageDetails()
         {
             ReportPageDetails result = new ReportPageDetails();
-            result.candidate_Rejected = db.candidatesProcess.Where(x => x.status == "rejected" || x.status == "will not Suit").Count(); 
+            result.candidate_Rejected = db.candidatesProcess.Where(x => x.status == "rejected" || x.status == "not Suit").Count(); 
             result.candidate_selected = db.candidatesProcess.Where(x => x.status == "offer raised").Count(); 
             result.total_of_candidate = db.candidates.Count();
             result.totalInterview = db.interviews.Count();
@@ -387,8 +425,7 @@ namespace byteforzaFinalProject.IRepo
 		                jobProcessId = j.Id,
 		                status = cp.status
 	                  }).ToList();
-
-            return result;
+			return result;
         }
         public bool isJobApplied(int jobId, string email)
         {
@@ -409,7 +446,7 @@ namespace byteforzaFinalProject.IRepo
             List<InterviewListDTO> result = (from c in db.candidates
                           join cp in db.candidatesProcess on c.Id equals cp.CandidateId
                           join j in db.jobs on cp.JobId equals j.Id
-                          where ((cp.status == "h1" && cp.Hr==null) || (cp.status == "tr1" && cp.Tech1 == null) || (cp.status == "tr2" && cp.Tech2 == null)) 
+                          where ((cp.status == "hr" && (cp.Hr==null|| cp.Hr == 0)) || (cp.status == "tr1" && cp.Tech1 == null) || (cp.status == "tr2" && (cp.Tech2 == null || cp.Tech2 == 0))) 
                           select new InterviewListDTO
                           {
                               CandidateId = c.Id,
@@ -498,7 +535,11 @@ namespace byteforzaFinalProject.IRepo
             CandidateProcess candidateProcess = (from cp in db.candidatesProcess
                                                  where cp.CandidateId == candidateId && cp.JobId == jobId
                                                  select cp).FirstOrDefault();
-            candidateProcess.status = "tr1";
+			Job job = (from j in db.jobs
+					   where j.Id == jobId
+					   select j).FirstOrDefault();
+			job.OnProcess += 1;  
+			candidateProcess.status = "tr1";
             db.SaveChanges();
         }
         public  async void declineApproval(int candidateId ,int  jobId)
@@ -506,7 +547,8 @@ namespace byteforzaFinalProject.IRepo
             CandidateProcess candidateProcess = (from cp in db.candidatesProcess
                                                  where cp.CandidateId == candidateId && cp.JobId == jobId
                                                  select cp).FirstOrDefault();
-            candidateProcess.status = "not siuted";
+			
+			candidateProcess.status = "not siuted";
             db.SaveChanges();
         }
 
@@ -526,6 +568,31 @@ namespace byteforzaFinalProject.IRepo
                                             }).ToList();
             return result;
          }
+        public SingleFeedbackDetails GetSingleFeedbackDetails(int id)
+        {
+            SingleFeedbackDetails result = (from f in db.feedbacks
+                                            join i in db.interviews on f.interviewId equals i.Id
+                                            join j in db.jobs on i.JobId equals j.Id
+                                            join c in db.candidates on i.CandidateId equals c.Id
+                                            where f.Id == id
+                                            select new SingleFeedbackDetails
+                                            {
+                                                CandidateId = i.CandidateId,
+                                                CandidateName = c.Name,
+                                                oops = f.oopsRating,
+                                                logicalThinking = f.logicalThinking,
+                                                programming = f.programming,
+                                                status = f.status,
+                                                comments = f.comment,
+                                                dateOnly = DateOnly.FromDateTime(i.InterviewDate),
+                                                timeOnly = new TimeOnly(i.InterviewDate.Hour, i.InterviewDate.Minute),
+                                                Role = j.Role,
+                                                jobId = j.Id,
+                                                InterviewPanel = i.InterviewPanel,
+                                                TypeOfRound = i.typeOfRound
+                                            }).FirstOrDefault();
+            return result;
+        }
 	}
    
 }

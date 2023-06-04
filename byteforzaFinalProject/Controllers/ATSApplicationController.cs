@@ -3,6 +3,7 @@ using byteforzaFinalProject.Interface;
 using byteforzaFinalProject.IRepo;
 using byteforzaFinalProject.Models;
 using byteforzaFinalProject.Response;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
@@ -11,6 +12,7 @@ using System.Diagnostics;
 
 namespace byteforzaFinalProject.Controllers
 {
+    [Authorize(Roles = "staff")]
     public class ATSApplicationController : Controller
     {
 		private readonly CandidateInterface candidateRepo;
@@ -142,7 +144,11 @@ namespace byteforzaFinalProject.Controllers
         }
         public async Task<IActionResult> AddNewFeedback(AddFeedback addFeedback)
         {
-            return Ok(Json(await candidateRepo.AddFeedBack(addFeedback));
+            return Ok(Json(await candidateRepo.AddFeedBack(addFeedback)));
+        }
+        public ActionResult getFeedbackDetails(int id) {
+            ViewData["details"] = candidateRepo.GetSingleFeedbackDetails(id);
+            return View();
         }
     }
 }

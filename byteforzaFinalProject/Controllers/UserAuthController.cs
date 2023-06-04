@@ -1,6 +1,7 @@
 ﻿using byteforzaFinalProject.DTO;
 using byteforzaFinalProject.Interface;
 using byteforzaFinalProject.Response;
+using Duende.IdentityServer.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -16,6 +17,12 @@ namespace byteforzaFinalProject.Controllers
         }
         public IActionResult Login()
         {
+            if(User.IsAuthenticated())
+            {
+                FormResponse formResponse = new FormResponse();
+                formResponse.result = "success";
+				return RedirectToAction("RedirectAction", formResponse);
+			}
             return View();
         }
         [HttpPost]
