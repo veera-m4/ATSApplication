@@ -156,7 +156,7 @@ textarea:active{
 			</div>
 		</div>
 		<div class="buttons-section">
-			<div class="btn" onclick="location.href = '@Url.Action("CandidateDetail","ATSApplication")'">cancel</div>
+			<div class="btn" id="cancelButton" onclick="location.href = '@Url.Action("CandidateDetail","ATSApplication")'">cancel</div>
 			<div class="btn" id="btnqrt">save changes</div>
 		</div>
 	</div>
@@ -203,6 +203,10 @@ textarea:active{
 						url: '@Url.Action("EditJob","ATSApplication")',
 						data: dataset,
 						dataType: 'json',
+						beforeSend: function () {
+										jQuery("#btnqrt").hide();
+										jQuery("#cancelButton").hide();
+									},
 						success: function (res) {
 							if (res.result === "success")
 							{

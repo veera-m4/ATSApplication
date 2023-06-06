@@ -1,4 +1,5 @@
 ﻿using byteforzaFinalProject.Interface;
+using Microsoft.AspNetCore.Mvc;
 
 namespace byteforzaFinalProject.IRepo
 {
@@ -6,7 +7,7 @@ namespace byteforzaFinalProject.IRepo
 	{
 		public async Task<string> saveAndGetFileName(IFormFile file)
 		{
-			string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Files");
+			string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\Files");
 
 			if (!Directory.Exists(path))
 				Directory.CreateDirectory(path);
@@ -18,7 +19,7 @@ namespace byteforzaFinalProject.IRepo
 			{
 				file.CopyTo(stream);
 			}
-			return fileNameWithPath;
+			return file.FileName;
 		}
 	}
 }

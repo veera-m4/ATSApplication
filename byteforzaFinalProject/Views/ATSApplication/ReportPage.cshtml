@@ -169,7 +169,8 @@
                 margin: 5px;
                 background-color: #ffffff;
                 overflow-y: scroll;
-                height:250px
+                height:250px;
+                width:auto;
     
             }
             .report-buttom-section
@@ -185,7 +186,8 @@
                 margin: 5px;
                 background-color: #ffffff;
                 overflow-y: scroll;
-                height:630px
+                height:630px;
+                width:auto;
             }
             .btn-primary
             {
@@ -202,7 +204,9 @@
             .table td
             {
                 font-size: 12px;
-                padding: 2rem;
+                padding: 2px;
+                padding-top:1rem;
+                padding-bottom:1rem;
                 vertical-align: middle;
             }
 
@@ -237,10 +241,14 @@
                 margin: 20px;
                 font-size: small;
             }
+            .main-section
+            {
+                padding : 2rem;
+            }
     </style>
   </head>
   <body>
-    <div>
+    <div class = "main-section">
         <div class = "top-section">
             <diV class ="top-left-section">
                 <div>
@@ -346,16 +354,15 @@
                 <div class = "report-buttom-section-left-buttom">
                     <div class="panel-heading">
                         <h2>recent interview result</h2>
-                        <button class="btn btn-danger pull-right"><span class="glyphicon glyphicon-plus"></span> Add</button>
                     </div>
                     <table class="table">
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>interviewer</th>
-                                <th>type of round</th>
-                                <th >result</th>
-                                <th></th>
+                                <th>Designation</th>
+                                <th>Interviewer</th>
+                                <th>Type of round</th>
+                                <th >Result</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -363,12 +370,10 @@
                             {
                                 <tr>
                                 <td>@interviewReportDetails.Name</td>
+                                <td>@interviewReportDetails.jobName</td>
                                 <td>@interviewReportDetails.InterviewPanel</td>
                                 <td>@interviewReportDetails.type_of_round</td>
                                 <td>@interviewReportDetails.result</td>
-                                <td>
-                                <button class="btn btn-danger pull-right"><span class="glyphicon glyphicon-trash"></span> Edit</button>
-                                </td>
                             </tr>
                             }
                             
@@ -385,11 +390,11 @@
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Designation</th>
                             <th>interviewer</th>
                             <th>type of round</th>
                             <th>Date</th>
                             <th>Time</th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -397,6 +402,7 @@
                         {
                             <tr>
                             <td>@interviewScheludeDetail.Name</td>
+                            <td>@interviewScheludeDetail.Role</td>
                             <td>@interviewScheludeDetail.InterviewPanel</td>
                             <td>
                                 @interviewScheludeDetail.type_of_round</td>
@@ -405,9 +411,6 @@
                             </td>
                             <td>
                                 @interviewScheludeDetail.TimeOnly
-                            </td>
-                            <td>
-                                <button class="btn btn-danger pull-right"><span class="glyphicon glyphicon-trash"></span> Edit</button>
                             </td>
                         </tr>
                         }

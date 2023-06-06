@@ -128,7 +128,9 @@ namespace byteforzaFinalProject.IRepo
         {
             List< CandidateProfileData> listData = (from c in db.candidates
                            join cp in db.candidatesProcess on c.Id equals cp.CandidateId
+                           join j in db.jobs on cp.JobId equals j.Id
                            select new CandidateProfileData {
+                               Role = j.Role,
                                Name = c.Name,
                                Id = c.Id,
                                JobId = cp.JobId,
@@ -257,8 +259,12 @@ namespace byteforzaFinalProject.IRepo
 			interview.InterviewPanel = scheduleInterview.InterviewPanel;
 			interview.CandidateId = scheduleInterview.candidateId;
 			interview.JobId = scheduleInterview.jobId;
-			interview.typeOfRound = scheduleInterview.type_of_round;
-			await db.interviews.AddAsync(interview);
+            string type_of_round = (from cp in db.candidatesProcess
+                                    where cp.CandidateId == scheduleInterview.candidateId && cp.JobId == scheduleInterview.jobId
+                                    select cp.status).FirstOrDefault();
+            interview.typeOfRound = type_of_round == "tr1" ? "technical 1" : (type_of_round == "tr1" ? "technical 2" : "general hr") ;
+
+            await db.interviews.AddAsync(interview);
             await db.SaveChangesAsync();
             Thread.Sleep(5000);
             CandidateProcess candidateProcess = db.candidatesProcess.FirstOrDefault(x => x.CandidateId == scheduleInterview.candidateId && x.JobId == scheduleInterview.jobId);
@@ -320,7 +326,11 @@ namespace byteforzaFinalProject.IRepo
 			}
             else
             {
-				candidateProcess.status = "rejected";
+                Job job = (from j in db.jobs
+                           where j.Id == interview.JobId
+                           select j).FirstOrDefault();
+                job.OnProcess -= 1;
+                candidateProcess.status = "rejected";
 				interview.Status = "rejected";
 			}
             await db.feedbacks.AddAsync(feedback);
@@ -333,9 +343,11 @@ namespace byteforzaFinalProject.IRepo
         {
             List<FeedbackPageDTO> interviewScheludeDetails = (from f in db.feedbacks
                                                               join i in db.interviews on f.interviewId equals i.Id
+                                                              join j in db.jobs on i.JobId equals j.Id
                                                               join c in db.candidates on i.CandidateId equals c.Id
                                                               select new FeedbackPageDTO
                                                               {
+                                                                  jobName = j.Role,
                                                                   id = f.Id,
                                                                   candidateId = c.Id,
                                                                   Name = c.Name,
@@ -374,9 +386,11 @@ namespace byteforzaFinalProject.IRepo
         {
             List<InterviewScheludeDetail> result = (from c in db.candidates
                                                    join i in db.interviews on c.Id equals i.CandidateId
+                                                   join j in db.jobs on i.JobId equals j.Id
                                                    where i.InterviewDate >= DateTime.Now
                                                    select new InterviewScheludeDetail
                                                    {
+                                                       Role = j.Role,
                                                        Name = c.Name,
                                                        InterviewPanel = i.InterviewPanel,
                                                        type_of_round = i.typeOfRound,
@@ -389,10 +403,12 @@ namespace byteforzaFinalProject.IRepo
         {
             List<InterviewReportDetails> result = (from c in db.candidates
                                                    join i in db.interviews on c.Id equals i.CandidateId
+                                                   join j in db.jobs on i.JobId equals j.Id
                                                    where i.InterviewDate <= DateTime.Now
                                                    select new InterviewReportDetails
                                                    {
                                                        Name = c.Name,
+                                                       jobName = j.Role,
                                                        InterviewPanel = i.InterviewPanel,
                                                        result = i.Status,
                                                        type_of_round = i.typeOfRound,
@@ -406,7 +422,8 @@ namespace byteforzaFinalProject.IRepo
             ReportPageDetails result = new ReportPageDetails();
             result.candidate_Rejected = db.candidatesProcess.Where(x => x.status == "rejected" || x.status == "not Suit").Count(); 
             result.candidate_selected = db.candidatesProcess.Where(x => x.status == "offer raised").Count(); 
-            result.total_of_candidate = db.candidates.Count();
+            result.total_of_candidate = db.candidatesProcess.Count();
+            result.candidate_on_process = result.total_of_candidate - (result.candidate_Rejected + result.candidate_selected);
             result.totalInterview = db.interviews.Count();
             return result;
         }
@@ -483,6 +500,20 @@ namespace byteforzaFinalProject.IRepo
                                                  select cp).FirstOrDefault();
             if (candidateProcess.Hr != null)
             {
+                result.hrStatus = (from i in db.interviews
+                                   where i.Id == candidateProcess.Hr
+                                   select i.Status
+                                   ).FirstOrDefault();
+
+                result.tr1Status = (from i in db.interviews
+                                   where i.Id == candidateProcess.Tech1
+                                    select i.Status
+                                   ).FirstOrDefault();
+                result.tr2Status = (from i in db.interviews
+                                   where i.Id == candidateProcess.Tech2
+                                   select i.Status
+                                   ).FirstOrDefault();
+
                 result.hrId = candidateProcess.Hr;
                 result.tr1Id = candidateProcess.Tech1;
                 result.tr2Id = candidateProcess.Tech2;

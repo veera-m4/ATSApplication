@@ -2,6 +2,7 @@
 {
     public class CandidateProfileData
     {
+        public string Role { get; set; }
         public int Id { get; set; }
         public int JobId { get; set; }
         public string Name { get; set; }

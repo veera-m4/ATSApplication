@@ -165,7 +165,7 @@
 			</div>
 		</div>
 		<div class="buttons-section">
-			<div class="btn" onclick="location.href = '@Url.Action("CandidateDetail","ATSApplication")'">cancel</div>
+			<div class="btn" id="cancelButton" onclick="location.href = '@Url.Action("CandidateDetail","ATSApplication")'">cancel</div>
 			<div class="btn" id="btnqrt">Add</div>
 
 		</div>
@@ -211,6 +211,10 @@
 						url: '@Url.Action("AddJob","ATSApplication")',
 						data: dataset,
 						dataType: 'json',
+						beforeSend: function () {
+										jQuery("#btnqrt").hide();
+										jQuery("#cancelButton").hide();
+									},
 						success: function (res) {
 							if (res.result === "success") {
 								window.location.href = '@Url.Action("CandidateDetail")';

@@ -264,7 +264,7 @@
 		</div>
 		<div class="buttons-section">
 			<div class="btn" id="addbbtn">Add</div>
-			<div class="btn">cancel</div>
+			<div class="btn" id="cancelButton">cancel</div>
 		</div>
 	</div>
 
@@ -360,6 +360,10 @@
 						dataType: 'json',
 						contentType :false,
 						processData :false,
+						beforeSend: function () {
+										jQuery("#addbbtn").hide();
+										jQuery("#cancelButton").hide();
+									},
 						success: function (res) {
 							if (res.result === "success") {
 								window.location.href = '@Url.Action("Index")';

@@ -4,6 +4,7 @@ namespace byteforzaFinalProject.DTO
 {
     public class FeedbackPageDTO
     {
+        public string jobName { get; set; }
         public int id { get; set; }
         public int candidateId { get; set; }
         public string Name { get; set; }

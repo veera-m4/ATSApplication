@@ -5,6 +5,10 @@
         public int? tr1Id { get; set; }
         public int? tr2Id { get; set; }
         public int? hrId { get; set; }
+
+        public string tr1Status { get; set; }
+        public string tr2Status { get; set; }
+        public string hrStatus { get; set; }
         public string jobName { get; set; }
         public string LastestStatus { get; set; }
         public int Id { get; set; }

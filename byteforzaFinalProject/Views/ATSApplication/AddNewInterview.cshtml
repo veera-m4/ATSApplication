@@ -193,7 +193,7 @@
 				<label>Interview Date and Time</label>
 				<input type = "datetime-local"class =  "input" id = "datatime" >
 				<div class="buttons-section">
-					<div class="btn" onclick="location.href = '@Url.Action("CandidateDetail","ATSApplication")'">cancel</div>
+						<div class="btn" id="cancelButton" onclick="location.href = '@Url.Action("CandidateDetail","ATSApplication")'">cancel</div>
 					<div class="btn" id="btnqrt">Add</div>
 
 				</div>
@@ -404,6 +404,10 @@
 									dataType: 'json',
 									contentType: false,
 									processData: false,
+									beforeSend: function () {
+										jQuery("#btnqrt").hide();
+										jQuery("#cancelButton").hide();
+									},
 									success: function (data) {
 
 										console.log("data received successfully");
